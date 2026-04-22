@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Policaturas — Catálogo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0e0c;
+      --surface: #1a1916;
+      --card: #211f1c;
+      --border: #2e2b27;
+      --gold: #c9a84c;
+      --gold-light: #e2c97e;
+      --text: #f0ece4;
+      --muted: #7a7568;
+      --ig: #e1306c;
+      --yape: #6c2fa0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,14,12,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 70px;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.04em; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--gold); }
+    nav { display: flex; gap: 2rem; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    nav a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--gold); }
+
+    /* ── CARRITO HEADER ── */
+    .cart-btn {
+      position: relative; background: transparent; border: 1px solid var(--border);
+      color: var(--text); width: 44px; height: 44px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-size: 1.1rem;
+    }
+    .cart-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .cart-count {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--gold); color: #0f0e0c;
+      font-size: 0.65rem; font-weight: 700;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      display: none;
+    }
+    .cart-count.visible { display: flex; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 5rem 5vw 3rem; display: flex; flex-direction: column; gap: 1rem;
+      border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -80px; right: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; line-height: 1.05; max-width: 600px; }
+    .hero h1 em { font-style: italic; color: var(--gold-light); }
+    .hero p { color: var(--muted); max-width: 420px; line-height: 1.7; font-size: 0.95rem; }
+    .delivery-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-light); font-size: 0.78rem; letter-spacing: 0.08em;
+      padding: 0.4rem 1rem; border-radius: 100px; width: fit-content;
+    }
+
+    /* ── GRID ── */
+    .catalog { padding: 3rem 5vw 5rem; }
+    .catalog-title { font-family: 'Playfair Display', serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 0.5s ease both; cursor: pointer;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.10s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+
+    /* ── IMAGEN ── */
+    .card-img-wrap { position: relative; overflow: hidden; background: #fff; }
+    .card-img-wrap img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .card:hover .card-img-wrap img { transform: scale(1.04); }
+    .badge-oferta {
+      position: absolute; top: 12px; left: 12px;
+      background: #e53935; color: #fff;
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 2px;
+    }
+
+    /* ── CARD BODY ── */
+    .card-body { padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); }
+    .card-color { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+    .sizes-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .sizes { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .size-tag { border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.72rem; padding: 0.25rem 0.6rem; border-radius: 2px; font-weight: 500; }
+
+    /* Precio con tachado */
+    .price-wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+    .card-price { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--gold-light); }
+    .card-price-old { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; }
+
+    /* ── BOTÓN COMPRAR ── */
+    .btn-comprar {
+      margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.75rem; border-radius: 3px; border: none; cursor: pointer;
+      background: var(--gold); color: #0f0e0c;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s;
+    }
+    .btn-comprar:hover { background: var(--gold-light); transform: scale(1.02); }
+
+    /* ══════════════════════════════
+       POPUP / MODAL
+    ══════════════════════════════ */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px); z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+      max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .overlay.open .modal { transform: translateY(0); }
+
+    .modal-img { background: #fff; }
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .modal-body { padding: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .modal-close {
+      align-self: flex-end; background: transparent; border: 1px solid var(--border);
+      color: var(--muted); width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { border-color: var(--text); color: var(--text); }
+    .modal-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; }
+    .modal-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+    .modal-color { font-size: 0.8rem; color: var(--muted); }
+    .modal-price-wrap { display: flex; align-items: baseline; gap: 0.7rem; }
+    .modal-price { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold-light); }
+    .modal-price-old { font-size: 1rem; color: var(--muted); text-decoration: line-through; }
+
+    .modal-actions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: auto; }
+    .btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.8rem; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-ig { background: var(--ig); color: #fff; }
+    .btn-ig:hover { background: #c0275c; }
+    .btn-yape { background: var(--yape); color: #fff; }
+    .btn-yape:hover { background: #5a2588; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; color: var(--muted); font-size: 0.8rem; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 900; color: var(--text); }
+    .footer-logo span { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } .modal { grid-template-columns: 1fr; } .modal-img { max-height: 300px; } }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } nav { display: none; } .hero h1 { font-size: 2rem; } }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="#">Poli<span>caturas</span></a>
+    <nav>
+      <a href="#">Inicio</a>
+      <a href="#">Catálogo</a>
+      <a href="#">Contacto</a>
+    </nav>
+    <button class="cart-btn" onclick="toggleCart()" title="Carrito">
+      🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="hero-label">Colección Hombre</span>
+    <h1>Diseños que <em>marcan</em><br>la diferencia.</h1>
+    <p>Polos con estampado DTF de alta calidad, 100% algodón pima reactivo. No despinta, suave al tacto.</p>
+    <div class="delivery-badge">🚚 Delivery gratis en compras mayores a S/ 100</div>
+  </section>
+
+  <!-- CATÁLOGO -->
+  <section class="catalog">
+    <p class="catalog-title">— Polos Hombre</p>
+    <div class="grid" id="productGrid"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Poli<span>caturas</span></div>
+    <div>© 2026 Policaturas — Todos los derechos reservados</div>
+    <a href="https://instagram.com/policaturas" target="_blank" style="color:var(--muted);text-decoration:none;">@policaturas</a>
+  </footer>
+
+  <!-- POPUP MODAL -->
+  <div class="overlay" id="overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <div class="modal-img"><img id="modalImg" src="" alt="" /></div>
+      <div class="modal-body">
+        <button class="modal-close" onclick="closeModalBtn()">✕</button>
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-color" id="modalColor"></div>
+        <div class="modal-price-wrap">
+          <div class="modal-price" id="modalPrice"></div>
+          <div class="modal-price-old" id="modalPriceOld"></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes" id="modalSizes"></div>
+        </div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-actions">
+          <a class="btn btn-ig" id="modalIG" href="https://ig.me/m/policaturas" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Escribir al Instagram
+          </a>
+          <a class="btn btn-yape" id="modalYape" href="#" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Pagar con Yape
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── PRODUCTOS ──
+    const productos = [
+      {
+        id: 1,
+        nombre: "Polo Homero TV",
+        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
+        precio: "S/ 47.00",
+        precioAnterior: "S/ 55.00",
+        tallas: ["S", "M", "L"],
+        color: "Negro",
+        imagen: "homer.png",
+        linkYape: "#" // REEMPLAZA con tu link de Culqi
+      },
+      {
+        id: 2,
+        nombre: "Polo Antisocial Club",
+        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
+        precio: "S/ 47.00",
+        precioAnterior: "S/ 55.00",
+        tallas: ["S", "M", "L"],
+        color: "Negro",
+        imagen: "antisocial.png",
+        linkYape: "#" // REEMPLAZA con tu link de Culqi
+      },
+      {
+        id: 3,
+        nombre: "Polo Bartman",
+        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
+        precio: "S/ 47.00",
+        precioAnterior: "S/ 55.00",
+        tallas: ["S", "M", "L"],
+        color: "Azul Marino",
+        imagen: "bartman.png",
+        linkYape: "#" // REEMPLAZA con tu link de Culqi
+      }
+    ];
+
+    // ── RENDERIZAR CARDS ──
+    const grid = document.getElementById('productGrid');
+    productos.forEach(p => {
+      grid.innerHTML += `
+        <div class="card" onclick="openModal(${p.id})">
+          <div class="card-img-wrap">
+            <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
+            <span class="badge-oferta">Oferta</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">${p.nombre}</div>
+            <div class="card-color">Color: ${p.color}</div>
+            <div>
+              <div class="sizes-label">Tallas</div>
+              <div class="sizes">${p.tallas.map(t => `<span class="size-tag">${t}</span>`).join('')}</div>
+            </div>
+            <div class="price-wrap">
+              <div class="card-price">${p.precio}</div>
+              <div class="card-price-old">${p.precioAnterior}</div>
+            </div>
+            <button class="btn-comprar">🛒 Comprar</button>
+          </div>
+        </div>`;
+    });
+
+    // ── MODAL ──
+    let cartItems = 0;
+
+    function openModal(id) {
+      const p = productos.find(x => x.id === id);
+      document.getElementById('modalImg').src = p.imagen;
+      document.getElementById('modalImg').alt = p.nombre;
+      document.getElementById('modalName').textContent = p.nombre;
+      document.getElementById('modalColor').textContent = 'Color: ' + p.color;
+      document.getElementById('modalPrice').textContent = p.precio;
+      document.getElementById('modalPriceOld').textContent = p.precioAnterior;
+      document.getElementById('modalDesc').textContent = p.descripcion;
+      document.getElementById('modalYape').href = p.linkYape;
+      const sizesEl = document.getElementById('modalSizes');
+      sizesEl.innerHTML = p.tallas.map(t => `<span class="size-tag">${t}</span>`).join('');
+      document.getElementById('overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('overlay')) closeModalBtn();
+    }
+
+    function closeModalBtn() {
+      document.getElementById('overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function toggleCart() {
+      cartItems++;
+      const count = document.getElementById('cartCount');
+      count.textContent = cartItems;
+      count.classList.add('visible');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+  </script>
+</body>
+</html>
