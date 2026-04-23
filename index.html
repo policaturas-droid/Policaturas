@@ -10,17 +10,15 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
 
-    /* HEADER */
     header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px}
-    .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);text-decoration:none;cursor:pointer}
+    .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);cursor:pointer}
     .logo span{color:var(--gold)}
     nav{display:flex;gap:2rem;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
     nav a{color:inherit;text-decoration:none;transition:color 0.2s;cursor:pointer}
     nav a:hover,nav a.active{color:var(--gold)}
-    .cart-btn{position:relative;background:transparent;border:1px solid var(--border);color:var(--text);width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:1.1rem}
+    .cart-btn{background:transparent;border:1px solid var(--border);color:var(--text);width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:1.1rem}
     .cart-btn:hover{border-color:var(--gold);color:var(--gold)}
 
-    /* SECCIONES */
     .seccion{display:none}
     .seccion.activa{display:block}
 
@@ -43,13 +41,15 @@
     .cat-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
     .cat-card:nth-child(1){animation-delay:.05s}.cat-card:nth-child(2){animation-delay:.10s}.cat-card:nth-child(3){animation-delay:.15s}.cat-card:nth-child(4){animation-delay:.20s}.cat-card:nth-child(5){animation-delay:.25s}.cat-card:nth-child(6){animation-delay:.30s}
 
-    /* Imagen de categoría — encuadrada y sin recorte */
-    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
-    .cat-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 0.4s ease;display:block}
+    /* Imagen categoría — centrada sin recorte */
+    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:flex-start;justify-content:center}
+    .cat-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;transition:transform 0.4s ease;display:block}
     .cat-card:hover .cat-img-wrap img{transform:scale(1.04)}
-    .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:3.5rem;transition:background 0.3s}
-    .cat-card:hover .cat-placeholder{background:#1e1c19}
 
+    /* Imagen hombre — ajuste especial para encuadrar bien */
+    .cat-img-wrap.hombre img{object-position:center 10%;object-fit:contain;background:#fff}
+
+    .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
     .cat-footer{padding:1.2rem 1.3rem;background:var(--card);display:flex;align-items:center;justify-content:space-between}
     .cat-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
     .cat-arrow{color:var(--gold);font-size:1.1rem;transition:transform 0.2s}
@@ -64,7 +64,11 @@
     .catalog-hero{padding:0 5vw 2rem;border-bottom:1px solid var(--border)}
     .catalog-hero h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;margin-bottom:1rem}
     .catalog-hero h2 em{font-style:italic;color:var(--gold-light)}
-    .catalog-grid{padding:2.5rem 5vw 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .catalog-grid{padding:2.5rem 5vw 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+    /* Botón volver */
+    .btn-volver-cat{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 1.3rem;border-radius:3px;font-size:0.78rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin:0 5vw 3rem;font-family:'DM Sans',sans-serif}
+    .btn-volver-cat:hover{border-color:var(--gold);color:var(--gold)}
 
     /* CARDS PRODUCTO */
     .card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;cursor:pointer}
@@ -73,7 +77,10 @@
     .card-img-wrap{position:relative;overflow:hidden;background:#fff;padding:10px}
     .card-img-wrap img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;transition:transform 0.4s ease}
     .card:hover .card-img-wrap img{transform:scale(1.03)}
-    .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.6rem;border-radius:2px}
+
+    /* Badge con % descuento */
+    .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:0.28rem 0.65rem;border-radius:2px;display:flex;align-items:center;gap:0.3rem}
+
     .card-body{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
     .card-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
     .card-color{font-size:0.73rem;color:var(--muted)}
@@ -119,14 +126,13 @@
     .btn-yape:hover{background:#5a2588}
 
     /* PRÓXIMAMENTE */
-    .pronto{padding:6rem 5vw;text-align:center;border-bottom:1px solid var(--border)}
+    .pronto{padding:6rem 5vw;text-align:center}
     .pronto-icon{font-size:4rem;margin-bottom:1.5rem}
     .pronto h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:1rem}
     .pronto p{color:var(--muted);font-size:0.95rem;margin-bottom:2rem}
     .btn-volver{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:#0f0e0c;padding:0.7rem 1.5rem;border-radius:3px;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.2s}
     .btn-volver:hover{background:var(--gold-light)}
 
-    /* FOOTER */
     footer{border-top:1px solid var(--border);padding:2.5rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:0.8rem}
     .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--text)}
     .footer-logo span{color:var(--gold)}
@@ -141,7 +147,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="logo" onclick="irA('inicio')">Poli<span>caturas</span></div>
     <nav>
@@ -168,19 +173,20 @@
         <span class="badge-info">📱 Billeteras digitales</span>
       </div>
     </section>
-
     <section class="categories">
       <p class="section-label">— Explora por categoría</p>
       <h2 class="section-title">¿Qué estás buscando?</h2>
       <div class="cat-grid">
 
         <div class="cat-card" onclick="irA('polos-hombre')">
-          <div class="cat-img-wrap">
+          <!-- object-fit:contain para que el chico quepa completo -->
+          <div class="cat-img-wrap hombre">
             <img src="cat-hombre.png" alt="Polos Hombre" />
           </div>
           <div class="cat-footer"><span class="cat-name">Polos Hombre</span><span class="cat-arrow">→</span></div>
         </div>
 
+        <!-- CORREGIDO: mujer = polo marrón -->
         <div class="cat-card" onclick="irA('mujer')">
           <div class="cat-img-wrap">
             <img src="cat-mujer.png" alt="Polos Mujer" />
@@ -188,6 +194,7 @@
           <div class="cat-footer"><span class="cat-name">Polos Mujer</span><span class="cat-arrow">→</span></div>
         </div>
 
+        <!-- CORREGIDO: niños = polo blanco -->
         <div class="cat-card" onclick="irA('ninos')">
           <div class="cat-img-wrap">
             <img src="cat-ninos.png" alt="Polos Niños" />
@@ -234,6 +241,10 @@
       </div>
     </div>
     <div class="catalog-grid" id="gridHombre"></div>
+    <!-- BOTÓN VOLVER -->
+    <div style="padding:0 5vw 4rem">
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
   </div>
 
   <!-- MUJER -->
@@ -286,7 +297,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-logo">Poli<span>caturas</span></div>
     <div class="footer-socials">
@@ -333,9 +343,9 @@
 
   <script>
     const productosHombre = [
-      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
-      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
-      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" }
+      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
+      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
+      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" }
     ];
 
     function renderGrid(productos, containerId) {
@@ -346,7 +356,7 @@
           <div class="card" onclick="abrirModal(${p.id})">
             <div class="card-img-wrap">
               <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
-              <span class="badge-oferta">Oferta</span>
+              <span class="badge-oferta">🏷 ${p.descuento}</span>
             </div>
             <div class="card-body">
               <div class="card-name">${p.nombre}</div>
@@ -396,7 +406,6 @@
       document.getElementById('modalTallas').innerHTML = p.tallas.map(t =>
         `<button class="talla-btn" onclick="seleccionarTalla(this,'${t}')">${t}</button>`
       ).join('');
-      document.getElementById('modalIG').href = `https://ig.me/m/policaturas`;
       document.getElementById('overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
