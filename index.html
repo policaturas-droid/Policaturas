@@ -110,6 +110,9 @@
     .btn-ig:hover{background:#c0275c}
     .btn-yape{background:var(--yape);color:#fff}
     .btn-yape:hover{background:#5a2588}
+    .btn-yape-delivery{background:#4a1f70;color:#fff;border:1px dashed rgba(255,255,255,0.3)}
+    .btn-yape-delivery:hover{background:#3d1a5e}
+    .btn-divider{font-size:0.68rem;color:var(--muted);text-align:center;letter-spacing:0.1em;text-transform:uppercase}
 
     .pronto{padding:6rem 5vw;text-align:center}
     .pronto-icon{font-size:4rem;margin-bottom:1.5rem}
@@ -140,6 +143,7 @@
       <a onclick="irA('mujer')" id="nav-mujer">Mujer</a>
       <a onclick="irA('ninos')" id="nav-ninos">Niños</a>
       <a onclick="irA('poleras')" id="nav-poleras">Poleras</a>
+      <a onclick="irA('oversize')" id="nav-oversize">🔥 Promos</a>
       <a onclick="irA('streetwear')" id="nav-streetwear">Streetwear</a>
     </nav>
     <button class="cart-btn" title="Carrito">🛒</button>
@@ -189,8 +193,10 @@
         </div>
 
         <div class="cat-card" onclick="irA('oversize')">
-          <div class="cat-placeholder">📦</div>
-          <div class="cat-footer"><span class="cat-name">Oversize</span><span class="cat-arrow">→</span></div>
+          <div class="cat-img-wrap">
+            <img src="promo-banner.png" alt="Promos" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">🔥 Promos</span><span class="cat-arrow">→</span></div>
         </div>
 
         <!-- cat-poleras.png = chico hoodie verde → Poleras Unisex ✅ -->
@@ -266,12 +272,25 @@
     </div>
   </div>
 
-  <!-- OVERSIZE -->
+  <!-- PROMOS -->
   <div class="seccion" id="sec-oversize">
-    <div class="pronto">
-      <div class="pronto-icon">📦</div>
-      <h2>Oversize</h2>
-      <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Promos</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>🔥 <em>Promos</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">📦 Delivery no incluido en esta promo</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridPromos"></div>
+    <div style="padding:0 5vw 4rem">
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
@@ -325,16 +344,34 @@
           <div class="tallas-select" id="modalTallas"></div>
           <div class="talla-aviso" id="tallaAviso">⚠ Por favor selecciona una talla antes de continuar</div>
         </div>
+        <!-- Selector de colores para promos -->
+        <div id="modalColoresWrap" style="display:none">
+          <div class="talla-label" style="margin-bottom:0.5rem">Colores disponibles</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem" id="modalColores"></div>
+          <div style="font-size:0.72rem;color:var(--muted)">Indica los 5 colores que deseas al escribirnos 👆</div>
+        </div>
         <div class="modal-desc" id="modalDesc"></div>
         <div class="modal-actions">
           <a class="btn btn-ig" id="modalIG" href="https://ig.me/m/policaturas" target="_blank">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             Escribir al Instagram
           </a>
+          <!-- Botón yape normal (productos regulares) -->
           <a class="btn btn-yape" id="modalYape" href="#" target="_blank" onclick="validarTalla(event)">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             Pagar con Yape
           </a>
+          <!-- Botones de pago para promos (2 opciones) -->
+          <div id="modalYapeDeliveryWrap" style="display:none;flex-direction:column;gap:0.6rem">
+            <div class="btn-divider">— elige cómo pagar —</div>
+            <a class="btn btn-yape" id="modalYapeSinDelivery" href="#" target="_blank" onclick="validarTalla(event)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Pagar S/ 99 · Sin delivery
+            </a>
+            <a class="btn btn-yape-delivery" id="modalYapeConDelivery" href="#" target="_blank" onclick="validarTalla(event)">
+              🚚 Pagar S/ 110 · Con delivery Lima
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -345,6 +382,23 @@
       { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
       { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
       { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" }
+    ];
+
+    const productosPromos = [
+      {
+        id:10,
+        nombre:"Pack 5 Polos Básicos",
+        descripcion:"Algodón Jersey 20/1 reactivo. Elige 5 polos en los colores que prefieras. Delivery no incluido (S/ 11 adicional para Lima).",
+        precio:"S/ 99.00",
+        precioAnterior: null,
+        descuento:"🔥 PROMO",
+        tallas:["S","M","L"],
+        colores:["Blanco","Negro","Gris Melange","Beige","Azul Marino"],
+        imagen:"promo-polos.png",
+        esPromo: true,
+        linkYapeSinDelivery:"#", // ← REEMPLAZA con link Culqi S/99
+        linkYapeConDelivery:"#"  // ← REEMPLAZA con link Culqi S/110
+      }
     ];
 
     function renderGrid(productos, containerId) {
@@ -382,6 +436,34 @@
     ];
     renderGrid(productosMujer, 'gridMujer');
 
+    function renderPromos(productos, containerId) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = '';
+      productos.forEach(p => {
+        grid.innerHTML += `
+          <div class="card" onclick="abrirModal(${p.id})">
+            <div class="card-img-wrap">
+              <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
+              <span class="badge-oferta">🔥 PROMO</span>
+            </div>
+            <div class="card-body">
+              <div class="card-name">${p.nombre}</div>
+              <div class="card-color" style="font-size:0.72rem">Colores: ${p.colores.join(' · ')}</div>
+              <div>
+                <div class="sizes-label">Tallas</div>
+                <div class="sizes">${p.tallas.map(t=>`<span class="size-tag">${t}</span>`).join('')}</div>
+              </div>
+              <div class="price-wrap">
+                <div class="card-price">${p.precio}</div>
+                <div style="font-size:0.73rem;color:var(--muted)">5 polos · delivery no incluido</div>
+              </div>
+              <button class="btn-comprar">🛒 Comprar promo</button>
+            </div>
+          </div>`;
+      });
+    }
+    renderPromos(productosPromos, 'gridPromos');
+
     function irA(seccion) {
       document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -394,7 +476,7 @@
 
     let tallaSeleccionada = null;
     let productoActual = null;
-    const todosLosProductos = [...productosHombre, ...productosMujer];
+    const todosLosProductos = [...productosHombre, ...productosMujer, ...productosPromos];
 
     function abrirModal(id) {
       const p = todosLosProductos.find(x => x.id === id);
@@ -403,15 +485,56 @@
       document.getElementById('modalImg').src = p.imagen;
       document.getElementById('modalImg').alt = p.nombre;
       document.getElementById('modalName').textContent = p.nombre;
-      document.getElementById('modalColor').textContent = 'Color: ' + p.color;
       document.getElementById('modalPrice').textContent = p.precio;
-      document.getElementById('modalPriceOld').textContent = p.precioAnterior;
-      document.getElementById('modalYape').href = p.linkYape;
       document.getElementById('tallaAviso').classList.remove('visible');
-      document.getElementById('modalDesc').innerHTML = p.descripcion + ' <strong>🚚 El precio incluye delivery.</strong>';
+
+      // Descripción
+      const deliveryNote = p.esPromo
+        ? ' <strong>📦 Delivery no incluido. +S/ 11 para Lima.</strong>'
+        : ' <strong>🚚 El precio incluye delivery.</strong>';
+      document.getElementById('modalDesc').innerHTML = p.descripcion + deliveryNote;
+
+      // Color / colores
+      const coloresWrap = document.getElementById('modalColoresWrap');
+      if (p.esPromo) {
+        document.getElementById('modalColor').textContent = '';
+        coloresWrap.style.display = 'block';
+        const colorMap = {
+          'Blanco': '#ffffff', 'Negro': '#1a1a1a',
+          'Gris Melange': '#b0b0b0', 'Beige': '#e8d5b7', 'Azul Marino': '#1a2a4a'
+        };
+        document.getElementById('modalColores').innerHTML = p.colores.map(c =>
+          `<span title="${c}" style="width:28px;height:28px;border-radius:50%;background:${colorMap[c]};border:2px solid var(--border);display:inline-block;cursor:default" title="${c}"></span>`
+        ).join('') + '<span style="font-size:0.78rem;color:var(--muted);align-self:center;margin-left:0.3rem">· Blanco · Negro · Gris Melange · Beige · Azul Marino</span>';
+      } else {
+        document.getElementById('modalColor').textContent = 'Color: ' + p.color;
+        coloresWrap.style.display = 'none';
+      }
+
+      // Precio anterior
+      const oldEl = document.getElementById('modalPriceOld');
+      oldEl.textContent = p.precioAnterior || '';
+
+      // Tallas
       document.getElementById('modalTallas').innerHTML = p.tallas.map(t =>
         `<button class="talla-btn" onclick="seleccionarTalla(this,'${t}')">${t}</button>`
       ).join('');
+
+      // Botones de pago — normal vs promo
+      const yapeNormal = document.getElementById('modalYape');
+      const yapeDeliveryWrap = document.getElementById('modalYapeDeliveryWrap');
+
+      if (p.esPromo) {
+        yapeNormal.style.display = 'none';
+        yapeDeliveryWrap.style.display = 'flex';
+        document.getElementById('modalYapeSinDelivery').href = p.linkYapeSinDelivery;
+        document.getElementById('modalYapeConDelivery').href = p.linkYapeConDelivery;
+      } else {
+        yapeNormal.style.display = 'flex';
+        yapeDeliveryWrap.style.display = 'none';
+        yapeNormal.href = p.linkYape;
+      }
+
       document.getElementById('overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
