@@ -22,7 +22,6 @@
     .seccion{display:none}
     .seccion.activa{display:block}
 
-    /* HERO */
     .hero{padding:6rem 5vw 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 70%);pointer-events:none}
     .hero-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1rem}
@@ -32,7 +31,6 @@
     .info-badges{display:flex;flex-wrap:wrap;gap:0.7rem}
     .badge-info{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold-light);font-size:0.78rem;padding:0.45rem 1rem;border-radius:100px}
 
-    /* CATEGORÍAS */
     .categories{padding:4rem 5vw 5rem}
     .section-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
     .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;margin-bottom:2.5rem}
@@ -41,13 +39,11 @@
     .cat-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
     .cat-card:nth-child(1){animation-delay:.05s}.cat-card:nth-child(2){animation-delay:.10s}.cat-card:nth-child(3){animation-delay:.15s}.cat-card:nth-child(4){animation-delay:.20s}.cat-card:nth-child(5){animation-delay:.25s}.cat-card:nth-child(6){animation-delay:.30s}
 
-    /* Imagen categoría — centrada sin recorte */
-    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:flex-start;justify-content:center}
+    /* Todas las imágenes de categoría con el mismo tratamiento */
+    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
     .cat-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;transition:transform 0.4s ease;display:block}
     .cat-card:hover .cat-img-wrap img{transform:scale(1.04)}
-
-    /* Imagen hombre — ajuste especial para encuadrar bien */
-    .cat-img-wrap.hombre img{object-position:center 10%;object-fit:contain;background:#fff}
+    .cat-img-wrap.hombre img{object-position:30% 15%}
 
     .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
     .cat-footer{padding:1.2rem 1.3rem;background:var(--card);display:flex;align-items:center;justify-content:space-between}
@@ -55,7 +51,6 @@
     .cat-arrow{color:var(--gold);font-size:1.1rem;transition:transform 0.2s}
     .cat-card:hover .cat-arrow{transform:translateX(5px)}
 
-    /* CATÁLOGO */
     .catalog-header{padding:3rem 5vw 0}
     .breadcrumb{font-size:0.78rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem}
     .breadcrumb span{cursor:pointer;transition:color 0.2s}
@@ -66,21 +61,13 @@
     .catalog-hero h2 em{font-style:italic;color:var(--gold-light)}
     .catalog-grid{padding:2.5rem 5vw 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 
-    /* Botón volver */
-    .btn-volver-cat{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 1.3rem;border-radius:3px;font-size:0.78rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin:0 5vw 3rem;font-family:'DM Sans',sans-serif}
-    .btn-volver-cat:hover{border-color:var(--gold);color:var(--gold)}
-
-    /* CARDS PRODUCTO */
     .card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;cursor:pointer}
     .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
-    .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.10s}.card:nth-child(3){animation-delay:.15s}.card:nth-child(4){animation-delay:.20s}.card:nth-child(5){animation-delay:.25s}.card:nth-child(6){animation-delay:.30s}
+    .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.10s}.card:nth-child(3){animation-delay:.15s}
     .card-img-wrap{position:relative;overflow:hidden;background:#fff;padding:10px}
     .card-img-wrap img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;transition:transform 0.4s ease}
     .card:hover .card-img-wrap img{transform:scale(1.03)}
-
-    /* Badge con % descuento */
-    .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:0.28rem 0.65rem;border-radius:2px;display:flex;align-items:center;gap:0.3rem}
-
+    .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.68rem;font-weight:700;padding:0.28rem 0.65rem;border-radius:2px}
     .card-body{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
     .card-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
     .card-color{font-size:0.73rem;color:var(--muted)}
@@ -93,7 +80,6 @@
     .btn-comprar{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.72rem;border-radius:3px;border:none;cursor:pointer;background:var(--gold);color:#0f0e0c;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
     .btn-comprar:hover{background:var(--gold-light);transform:scale(1.02)}
 
-    /* MODAL */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
     .overlay.open{opacity:1;pointer-events:all}
     .modal{background:var(--card);border:1px solid var(--border);border-radius:6px;max-width:800px;width:100%;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;transform:translateY(24px);transition:transform 0.3s}
@@ -125,7 +111,6 @@
     .btn-yape{background:var(--yape);color:#fff}
     .btn-yape:hover{background:#5a2588}
 
-    /* PRÓXIMAMENTE */
     .pronto{padding:6rem 5vw;text-align:center}
     .pronto-icon{font-size:4rem;margin-bottom:1.5rem}
     .pronto h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:1rem}
@@ -173,31 +158,32 @@
         <span class="badge-info">📱 Billeteras digitales</span>
       </div>
     </section>
+
     <section class="categories">
       <p class="section-label">— Explora por categoría</p>
       <h2 class="section-title">¿Qué estás buscando?</h2>
       <div class="cat-grid">
 
+        <!-- cat-hombre.png = chico azul marino → nombre: Polos Hombre ✅ -->
         <div class="cat-card" onclick="irA('polos-hombre')">
-          <!-- object-fit:contain para que el chico quepa completo -->
           <div class="cat-img-wrap hombre">
             <img src="cat-hombre.png" alt="Polos Hombre" />
           </div>
           <div class="cat-footer"><span class="cat-name">Polos Hombre</span><span class="cat-arrow">→</span></div>
         </div>
 
-        <!-- CORREGIDO: mujer = polo marrón -->
+        <!-- cat-ninos.png = niño polo blanco → nombre: Polos Mujer (swap de nombre) ✅ -->
         <div class="cat-card" onclick="irA('mujer')">
           <div class="cat-img-wrap">
-            <img src="cat-mujer.png" alt="Polos Mujer" />
+            <img src="cat-ninos.png" alt="Polos Mujer" />
           </div>
           <div class="cat-footer"><span class="cat-name">Polos Mujer</span><span class="cat-arrow">→</span></div>
         </div>
 
-        <!-- CORREGIDO: niños = polo blanco -->
+        <!-- cat-mujer.png = chica polo marrón → nombre: Polos Niños (swap de nombre) ✅ -->
         <div class="cat-card" onclick="irA('ninos')">
           <div class="cat-img-wrap">
-            <img src="cat-ninos.png" alt="Polos Niños" />
+            <img src="cat-mujer.png" alt="Polos Niños" />
           </div>
           <div class="cat-footer"><span class="cat-name">Polos Niños</span><span class="cat-arrow">→</span></div>
         </div>
@@ -207,6 +193,7 @@
           <div class="cat-footer"><span class="cat-name">Oversize</span><span class="cat-arrow">→</span></div>
         </div>
 
+        <!-- cat-poleras.png = chico hoodie verde → Poleras Unisex ✅ -->
         <div class="cat-card" onclick="irA('poleras')">
           <div class="cat-img-wrap">
             <img src="cat-poleras.png" alt="Poleras Unisex" />
@@ -241,7 +228,6 @@
       </div>
     </div>
     <div class="catalog-grid" id="gridHombre"></div>
-    <!-- BOTÓN VOLVER -->
     <div style="padding:0 5vw 4rem">
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
