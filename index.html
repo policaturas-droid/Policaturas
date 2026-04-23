@@ -235,10 +235,23 @@
 
   <!-- MUJER -->
   <div class="seccion" id="sec-mujer">
-    <div class="pronto">
-      <div class="pronto-icon">👚</div>
-      <h2>Polos Mujer</h2>
-      <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Polos Mujer</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>Polos <em>Mujer</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">🎁 Delivery incluido en el precio</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridMujer"></div>
+    <div style="padding:0 5vw 4rem">
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
@@ -362,6 +375,13 @@
     }
     renderGrid(productosHombre, 'gridHombre');
 
+    const productosMujer = [
+      { id:4, nombre:"Polo Snoopy Howl", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-howl.png", linkYape:"#" },
+      { id:5, nombre:"Polo Snoopy Mood", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"snoopy-mood.png", linkYape:"#" },
+      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:"#" }
+    ];
+    renderGrid(productosMujer, 'gridMujer');
+
     function irA(seccion) {
       document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -374,7 +394,7 @@
 
     let tallaSeleccionada = null;
     let productoActual = null;
-    const todosLosProductos = [...productosHombre];
+    const todosLosProductos = [...productosHombre, ...productosMujer];
 
     function abrirModal(id) {
       const p = todosLosProductos.find(x => x.id === id);
