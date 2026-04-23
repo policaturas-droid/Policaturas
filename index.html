@@ -10,7 +10,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
 
-    /* ── HEADER ── */
+    /* HEADER */
     header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px}
     .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);text-decoration:none;cursor:pointer}
     .logo span{color:var(--gold)}
@@ -20,11 +20,11 @@
     .cart-btn{position:relative;background:transparent;border:1px solid var(--border);color:var(--text);width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:1.1rem}
     .cart-btn:hover{border-color:var(--gold);color:var(--gold)}
 
-    /* ── SECCIONES ── */
+    /* SECCIONES */
     .seccion{display:none}
     .seccion.activa{display:block}
 
-    /* ── HERO INICIO ── */
+    /* HERO */
     .hero{padding:6rem 5vw 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 70%);pointer-events:none}
     .hero-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1rem}
@@ -34,22 +34,28 @@
     .info-badges{display:flex;flex-wrap:wrap;gap:0.7rem}
     .badge-info{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold-light);font-size:0.78rem;padding:0.45rem 1rem;border-radius:100px}
 
-    /* ── CATEGORÍAS ── */
+    /* CATEGORÍAS */
     .categories{padding:4rem 5vw 5rem}
     .section-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
     .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;margin-bottom:2.5rem}
     .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
-    .cat-card{border-radius:4px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;text-decoration:none;display:block}
+    .cat-card{border-radius:4px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;display:block}
     .cat-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
     .cat-card:nth-child(1){animation-delay:.05s}.cat-card:nth-child(2){animation-delay:.10s}.cat-card:nth-child(3){animation-delay:.15s}.cat-card:nth-child(4){animation-delay:.20s}.cat-card:nth-child(5){animation-delay:.25s}.cat-card:nth-child(6){animation-delay:.30s}
-    .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:3.5rem;transition:background 0.3s}
+
+    /* Imagen de categoría — encuadrada y sin recorte */
+    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+    .cat-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 0.4s ease;display:block}
+    .cat-card:hover .cat-img-wrap img{transform:scale(1.04)}
+    .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:3.5rem;transition:background 0.3s}
     .cat-card:hover .cat-placeholder{background:#1e1c19}
+
     .cat-footer{padding:1.2rem 1.3rem;background:var(--card);display:flex;align-items:center;justify-content:space-between}
     .cat-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
     .cat-arrow{color:var(--gold);font-size:1.1rem;transition:transform 0.2s}
     .cat-card:hover .cat-arrow{transform:translateX(5px)}
 
-    /* ── CATÁLOGO ── */
+    /* CATÁLOGO */
     .catalog-header{padding:3rem 5vw 0}
     .breadcrumb{font-size:0.78rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem}
     .breadcrumb span{cursor:pointer;transition:color 0.2s}
@@ -60,7 +66,7 @@
     .catalog-hero h2 em{font-style:italic;color:var(--gold-light)}
     .catalog-grid{padding:2.5rem 5vw 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 
-    /* ── CARD PRODUCTO ── */
+    /* CARDS PRODUCTO */
     .card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;cursor:pointer}
     .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
     .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.10s}.card:nth-child(3){animation-delay:.15s}.card:nth-child(4){animation-delay:.20s}.card:nth-child(5){animation-delay:.25s}.card:nth-child(6){animation-delay:.30s}
@@ -80,7 +86,7 @@
     .btn-comprar{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.72rem;border-radius:3px;border:none;cursor:pointer;background:var(--gold);color:#0f0e0c;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
     .btn-comprar:hover{background:var(--gold-light);transform:scale(1.02)}
 
-    /* ── MODAL ── */
+    /* MODAL */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
     .overlay.open{opacity:1;pointer-events:all}
     .modal{background:var(--card);border:1px solid var(--border);border-radius:6px;max-width:800px;width:100%;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;transform:translateY(24px);transition:transform 0.3s}
@@ -112,7 +118,7 @@
     .btn-yape{background:var(--yape);color:#fff}
     .btn-yape:hover{background:#5a2588}
 
-    /* ── PRÓXIMAMENTE ── */
+    /* PRÓXIMAMENTE */
     .pronto{padding:6rem 5vw;text-align:center;border-bottom:1px solid var(--border)}
     .pronto-icon{font-size:4rem;margin-bottom:1.5rem}
     .pronto h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:1rem}
@@ -120,7 +126,7 @@
     .btn-volver{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:#0f0e0c;padding:0.7rem 1.5rem;border-radius:3px;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.2s}
     .btn-volver:hover{background:var(--gold-light)}
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer{border-top:1px solid var(--border);padding:2.5rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:0.8rem}
     .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--text)}
     .footer-logo span{color:var(--gold)}
@@ -144,13 +150,12 @@
       <a onclick="irA('mujer')" id="nav-mujer">Mujer</a>
       <a onclick="irA('ninos')" id="nav-ninos">Niños</a>
       <a onclick="irA('poleras')" id="nav-poleras">Poleras</a>
+      <a onclick="irA('streetwear')" id="nav-streetwear">Streetwear</a>
     </nav>
     <button class="cart-btn" title="Carrito">🛒</button>
   </header>
 
-  <!-- ══════════════════════════
-       SECCIÓN: INICIO
-  ══════════════════════════ -->
+  <!-- INICIO -->
   <div class="seccion activa" id="sec-inicio">
     <section class="hero">
       <span class="hero-label">Bienvenido a Policaturas</span>
@@ -168,37 +173,50 @@
       <p class="section-label">— Explora por categoría</p>
       <h2 class="section-title">¿Qué estás buscando?</h2>
       <div class="cat-grid">
+
         <div class="cat-card" onclick="irA('polos-hombre')">
-          <div class="cat-placeholder">👕</div>
+          <div class="cat-img-wrap">
+            <img src="cat-hombre.png" alt="Polos Hombre" />
+          </div>
           <div class="cat-footer"><span class="cat-name">Polos Hombre</span><span class="cat-arrow">→</span></div>
         </div>
+
         <div class="cat-card" onclick="irA('mujer')">
-          <div class="cat-placeholder">👚</div>
+          <div class="cat-img-wrap">
+            <img src="cat-mujer.png" alt="Polos Mujer" />
+          </div>
           <div class="cat-footer"><span class="cat-name">Polos Mujer</span><span class="cat-arrow">→</span></div>
         </div>
+
         <div class="cat-card" onclick="irA('ninos')">
-          <div class="cat-placeholder">🧒</div>
+          <div class="cat-img-wrap">
+            <img src="cat-ninos.png" alt="Polos Niños" />
+          </div>
           <div class="cat-footer"><span class="cat-name">Polos Niños</span><span class="cat-arrow">→</span></div>
         </div>
+
         <div class="cat-card" onclick="irA('oversize')">
           <div class="cat-placeholder">📦</div>
           <div class="cat-footer"><span class="cat-name">Oversize</span><span class="cat-arrow">→</span></div>
         </div>
+
         <div class="cat-card" onclick="irA('poleras')">
-          <div class="cat-placeholder">🧥</div>
-          <div class="cat-footer"><span class="cat-name">Poleras</span><span class="cat-arrow">→</span></div>
+          <div class="cat-img-wrap">
+            <img src="cat-poleras.png" alt="Poleras Unisex" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Poleras Unisex</span><span class="cat-arrow">→</span></div>
         </div>
-        <div class="cat-card" onclick="irA('code2113')">
+
+        <div class="cat-card" onclick="irA('streetwear')">
           <div class="cat-placeholder">⚡</div>
-          <div class="cat-footer"><span class="cat-name">Code 2113</span><span class="cat-arrow">→</span></div>
+          <div class="cat-footer"><span class="cat-name">Streetwear</span><span class="cat-arrow">→</span></div>
         </div>
+
       </div>
     </section>
   </div>
 
-  <!-- ══════════════════════════
-       SECCIÓN: POLOS HOMBRE
-  ══════════════════════════ -->
+  <!-- POLOS HOMBRE -->
   <div class="seccion" id="sec-polos-hombre">
     <div class="catalog-header">
       <div class="breadcrumb">
@@ -218,9 +236,7 @@
     <div class="catalog-grid" id="gridHombre"></div>
   </div>
 
-  <!-- ══════════════════════════
-       SECCIONES PRÓXIMAMENTE
-  ══════════════════════════ -->
+  <!-- MUJER -->
   <div class="seccion" id="sec-mujer">
     <div class="pronto">
       <div class="pronto-icon">👚</div>
@@ -229,6 +245,8 @@
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
+
+  <!-- NIÑOS -->
   <div class="seccion" id="sec-ninos">
     <div class="pronto">
       <div class="pronto-icon">🧒</div>
@@ -237,6 +255,8 @@
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
+
+  <!-- OVERSIZE -->
   <div class="seccion" id="sec-oversize">
     <div class="pronto">
       <div class="pronto-icon">📦</div>
@@ -245,18 +265,22 @@
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
+
+  <!-- POLERAS -->
   <div class="seccion" id="sec-poleras">
     <div class="pronto">
       <div class="pronto-icon">🧥</div>
-      <h2>Poleras</h2>
+      <h2>Poleras Unisex</h2>
       <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
-  <div class="seccion" id="sec-code2113">
+
+  <!-- STREETWEAR -->
+  <div class="seccion" id="sec-streetwear">
     <div class="pronto">
       <div class="pronto-icon">⚡</div>
-      <h2>Code 2113</h2>
+      <h2>Streetwear</h2>
       <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
@@ -308,32 +332,12 @@
   </div>
 
   <script>
-    // ── PRODUCTOS HOMBRE ──
     const productosHombre = [
-      {
-        id: 1, nombre: "Polo Homero TV",
-        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
-        precio: "S/ 47.00", precioAnterior: "S/ 55.00",
-        tallas: ["S","M","L"], color: "Negro",
-        imagen: "homer.png", linkYape: "#" // ← REEMPLAZA con tu link de Culqi
-      },
-      {
-        id: 2, nombre: "Polo Antisocial Club",
-        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
-        precio: "S/ 47.00", precioAnterior: "S/ 55.00",
-        tallas: ["S","M","L"], color: "Negro",
-        imagen: "antisocial.png", linkYape: "#"
-      },
-      {
-        id: 3, nombre: "Polo Bartman",
-        descripcion: "100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.",
-        precio: "S/ 47.00", precioAnterior: "S/ 55.00",
-        tallas: ["S","M","L"], color: "Azul Marino",
-        imagen: "bartman.png", linkYape: "#"
-      }
+      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
+      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
+      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" }
     ];
 
-    // ── RENDERIZAR GRID ──
     function renderGrid(productos, containerId) {
       const grid = document.getElementById(containerId);
       grid.innerHTML = '';
@@ -362,17 +366,16 @@
     }
     renderGrid(productosHombre, 'gridHombre');
 
-    // ── NAVEGACIÓN ──
     function irA(seccion) {
       document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      document.getElementById('sec-' + seccion).classList.add('activa');
-      const navEl = document.getElementById('nav-' + seccion);
-      if (navEl) navEl.classList.add('active');
-      window.scrollTo({top: 0, behavior: 'smooth'});
+      const sec = document.getElementById('sec-' + seccion);
+      if (sec) sec.classList.add('activa');
+      const nav = document.getElementById('nav-' + seccion);
+      if (nav) nav.classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    // ── MODAL ──
     let tallaSeleccionada = null;
     let productoActual = null;
     const todosLosProductos = [...productosHombre];
@@ -403,17 +406,10 @@
       btn.classList.add('selected');
       tallaSeleccionada = talla;
       document.getElementById('tallaAviso').classList.remove('visible');
-      if (productoActual) {
-        const msg = encodeURIComponent(`Hola! Me interesa el ${productoActual.nombre} talla ${talla} 👕`);
-        document.getElementById('modalIG').href = `https://ig.me/m/policaturas`;
-      }
     }
 
     function validarTalla(e) {
-      if (!tallaSeleccionada) {
-        e.preventDefault();
-        document.getElementById('tallaAviso').classList.add('visible');
-      }
+      if (!tallaSeleccionada) { e.preventDefault(); document.getElementById('tallaAviso').classList.add('visible'); }
     }
 
     function cerrarModal() {
