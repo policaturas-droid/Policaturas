@@ -131,6 +131,18 @@
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}.catalog-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}}
     @media(max-width:560px){.cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.modal-img{max-height:260px}}
+
+    /* CARRUSEL */
+    .carousel{position:relative;overflow:hidden;background:#fff}
+    .carousel-track{display:flex;transition:transform 0.4s ease}
+    .carousel-track img{width:100%;flex-shrink:0;aspect-ratio:1/1;object-fit:contain;display:block;padding:10px}
+    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:2}
+    .carousel-btn:hover{background:rgba(0,0,0,0.7)}
+    .carousel-btn.prev{left:8px}
+    .carousel-btn.next{right:8px}
+    .carousel-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+    .carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,0.25);cursor:pointer;transition:background 0.2s}
+    .carousel-dot.active{background:var(--gold)}
   </style>
 </head>
 <body>
@@ -297,10 +309,23 @@
 
   <!-- POLERAS -->
   <div class="seccion" id="sec-poleras">
-    <div class="pronto">
-      <div class="pronto-icon">🧥</div>
-      <h2>Poleras Unisex</h2>
-      <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Poleras Unisex</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>Poleras <em>Unisex</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">🎁 Delivery incluido en el precio</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridPoleras"></div>
+    <div style="padding:0 5vw 4rem">
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
   </div>
@@ -464,6 +489,83 @@
     }
     renderPromos(productosPromos, 'gridPromos');
 
+    const productosPoleras = [
+      {
+        id: 7,
+        nombre: "Polera Pokémon Ghost",
+        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
+        precio: "S/ 75.00",
+        precioAnterior: null,
+        descuento: null,
+        tallas: ["S","M","L"],
+        color: "Negro",
+        imagenes: ["polera-haunter-mockup.png", "polera-haunter-modelo.png"],
+        linkYape: "#" // ← REEMPLAZA con tu link de Culqi
+      }
+    ];
+
+    function renderCarrusel(productos, containerId) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = '';
+      productos.forEach(p => {
+        const imgs = p.imagenes || [p.imagen];
+        const carruselId = 'car-' + p.id;
+        grid.innerHTML += `
+          <div class="card" onclick="abrirModal(${p.id})">
+            <div class="carousel" id="${carruselId}">
+              <div class="carousel-track" id="${carruselId}-track">
+                ${imgs.map(i => `<img src="${i}" alt="${p.nombre}" loading="lazy" />`).join('')}
+              </div>
+              ${imgs.length > 1 ? `
+                <button class="carousel-btn prev" onclick="moverCarrusel(event,'${carruselId}',-1)">‹</button>
+                <button class="carousel-btn next" onclick="moverCarrusel(event,'${carruselId}',1)">›</button>
+                <div class="carousel-dots">
+                  ${imgs.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="irASlide(event,'${carruselId}',${i})"></div>`).join('')}
+                </div>` : ''}
+            </div>
+            <div class="card-body">
+              <div class="card-name">${p.nombre}</div>
+              <div class="card-color">Color: ${p.color}</div>
+              <div>
+                <div class="sizes-label">Tallas</div>
+                <div class="sizes">${p.tallas.map(t=>`<span class="size-tag">${t}</span>`).join('')}</div>
+              </div>
+              <div class="price-wrap">
+                <div class="card-price">${p.precio}</div>
+              </div>
+              <button class="btn-comprar">🛒 Comprar</button>
+            </div>
+          </div>`;
+      });
+    }
+    renderCarrusel(productosPoleras, 'gridPoleras');
+
+    // Estado de carruseles
+    const carruselState = {};
+    function moverCarrusel(e, id, dir) {
+      e.stopPropagation();
+      const track = document.getElementById(id + '-track');
+      const total = track.children.length;
+      if (!carruselState[id]) carruselState[id] = 0;
+      carruselState[id] = (carruselState[id] + dir + total) % total;
+      actualizarCarrusel(id, total);
+    }
+    function irASlide(e, id, idx) {
+      e.stopPropagation();
+      const track = document.getElementById(id + '-track');
+      carruselState[id] = idx;
+      actualizarCarrusel(id, track.children.length);
+    }
+    function actualizarCarrusel(id, total) {
+      const idx = carruselState[id];
+      document.getElementById(id + '-track').style.transform = `translateX(-${idx * 100}%)`;
+      document.querySelectorAll(`#${id} .carousel-dot`).forEach((d,i) => {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+
+    const todosLosProductos = [...productosHombre, ...productosMujer, ...productosPromos, ...productosPoleras];
+
     function irA(seccion) {
       document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -476,54 +578,61 @@
 
     let tallaSeleccionada = null;
     let productoActual = null;
-    const todosLosProductos = [...productosHombre, ...productosMujer, ...productosPromos];
 
     function abrirModal(id) {
       const p = todosLosProductos.find(x => x.id === id);
       productoActual = p;
       tallaSeleccionada = null;
-      document.getElementById('modalImg').src = p.imagen;
-      document.getElementById('modalImg').alt = p.nombre;
+
+      // Imagen/carrusel en modal
+      const modalImgWrap = document.querySelector('.modal-img');
+      if (p.imagenes && p.imagenes.length > 1) {
+        carruselState['modal-car'] = 0;
+        modalImgWrap.innerHTML = `
+          <div class="carousel" id="modal-car" style="width:100%;height:100%">
+            <div class="carousel-track" id="modal-car-track">
+              ${p.imagenes.map(i=>`<img src="${i}" alt="${p.nombre}" style="width:100%;flex-shrink:0;aspect-ratio:1/1;object-fit:contain;padding:20px;background:#fff" />`).join('')}
+            </div>
+            <button class="carousel-btn prev" onclick="moverCarrusel(event,'modal-car',-1)">‹</button>
+            <button class="carousel-btn next" onclick="moverCarrusel(event,'modal-car',1)">›</button>
+            <div class="carousel-dots">
+              ${p.imagenes.map((_,i)=>`<div class="carousel-dot ${i===0?'active':''}" onclick="irASlide(event,'modal-car',${i})"></div>`).join('')}
+            </div>
+          </div>`;
+      } else {
+        modalImgWrap.innerHTML = `<img id="modalImg" src="${p.imagen || (p.imagenes && p.imagenes[0])}" alt="${p.nombre}" style="width:100%;max-height:460px;object-fit:contain;display:block" />`;
+      }
+
       document.getElementById('modalName').textContent = p.nombre;
       document.getElementById('modalPrice').textContent = p.precio;
       document.getElementById('tallaAviso').classList.remove('visible');
 
-      // Descripción
       const deliveryNote = p.esPromo
         ? ' <strong>📦 Delivery no incluido. +S/ 11 para Lima.</strong>'
         : ' <strong>🚚 El precio incluye delivery.</strong>';
       document.getElementById('modalDesc').innerHTML = p.descripcion + deliveryNote;
 
-      // Color / colores
       const coloresWrap = document.getElementById('modalColoresWrap');
       if (p.esPromo) {
         document.getElementById('modalColor').textContent = '';
         coloresWrap.style.display = 'block';
-        const colorMap = {
-          'Blanco': '#ffffff', 'Negro': '#1a1a1a',
-          'Gris Melange': '#b0b0b0', 'Beige': '#e8d5b7', 'Azul Marino': '#1a2a4a'
-        };
+        const colorMap = {'Blanco':'#ffffff','Negro':'#1a1a1a','Gris Melange':'#b0b0b0','Beige':'#e8d5b7','Azul Marino':'#1a2a4a'};
         document.getElementById('modalColores').innerHTML = p.colores.map(c =>
-          `<span title="${c}" style="width:28px;height:28px;border-radius:50%;background:${colorMap[c]};border:2px solid var(--border);display:inline-block;cursor:default" title="${c}"></span>`
-        ).join('') + '<span style="font-size:0.78rem;color:var(--muted);align-self:center;margin-left:0.3rem">· Blanco · Negro · Gris Melange · Beige · Azul Marino</span>';
+          `<span title="${c}" style="width:28px;height:28px;border-radius:50%;background:${colorMap[c]};border:2px solid var(--border);display:inline-block"></span>`
+        ).join('') + '<span style="font-size:0.75rem;color:var(--muted);align-self:center;margin-left:0.4rem">Blanco · Negro · Gris Melange · Beige · Azul Marino</span>';
       } else {
         document.getElementById('modalColor').textContent = 'Color: ' + p.color;
         coloresWrap.style.display = 'none';
       }
 
-      // Precio anterior
-      const oldEl = document.getElementById('modalPriceOld');
-      oldEl.textContent = p.precioAnterior || '';
+      document.getElementById('modalPriceOld').textContent = p.precioAnterior || '';
 
-      // Tallas
       document.getElementById('modalTallas').innerHTML = p.tallas.map(t =>
         `<button class="talla-btn" onclick="seleccionarTalla(this,'${t}')">${t}</button>`
       ).join('');
 
-      // Botones de pago — normal vs promo
       const yapeNormal = document.getElementById('modalYape');
       const yapeDeliveryWrap = document.getElementById('modalYapeDeliveryWrap');
-
       if (p.esPromo) {
         yapeNormal.style.display = 'none';
         yapeDeliveryWrap.style.display = 'flex';
