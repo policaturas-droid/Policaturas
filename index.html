@@ -156,7 +156,7 @@
       <a onclick="irA('ninos')" id="nav-ninos">Niños</a>
       <a onclick="irA('poleras')" id="nav-poleras">Poleras</a>
       <a onclick="irA('oversize')" id="nav-oversize">🔥 Promos</a>
-      <a onclick="irA('streetwear')" id="nav-streetwear">Streetwear</a>
+      <a onclick="irA('streetwear')" id="nav-streetwear">Gorras y Accesorios</a>
     </nav>
     <button class="cart-btn" title="Carrito">🛒</button>
   </header>
@@ -211,17 +211,19 @@
           <div class="cat-footer"><span class="cat-name">🔥 Promos</span><span class="cat-arrow">→</span></div>
         </div>
 
-        <!-- cat-poleras.png = chico hoodie verde → Poleras Unisex ✅ -->
+        <!-- cat-poleras.png = chico hoodie verde → Poleras ✅ -->
         <div class="cat-card" onclick="irA('poleras')">
           <div class="cat-img-wrap">
-            <img src="cat-poleras.png" alt="Poleras Unisex" />
+            <img src="cat-poleras.png" alt="Poleras" />
           </div>
-          <div class="cat-footer"><span class="cat-name">Poleras Unisex</span><span class="cat-arrow">→</span></div>
+          <div class="cat-footer"><span class="cat-name">Poleras</span><span class="cat-arrow">→</span></div>
         </div>
 
         <div class="cat-card" onclick="irA('streetwear')">
-          <div class="cat-placeholder">⚡</div>
-          <div class="cat-footer"><span class="cat-name">Streetwear</span><span class="cat-arrow">→</span></div>
+          <div class="cat-img-wrap">
+            <img src="cat-gorras.png" alt="Gorras y Accesorios" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Gorras y Accesorios</span><span class="cat-arrow">→</span></div>
         </div>
 
       </div>
@@ -313,11 +315,11 @@
       <div class="breadcrumb">
         <span onclick="irA('inicio')">Inicio</span>
         <span class="breadcrumb-sep">›</span>
-        <span style="color:var(--text)">Poleras Unisex</span>
+        <span style="color:var(--text)">Poleras</span>
       </div>
     </div>
     <div class="catalog-hero">
-      <h2>Poleras <em>Unisex</em></h2>
+      <h2>Poleras</h2>
       <div class="info-badges">
         <span class="badge-info">🚚 Envíos a Lima y provincias</span>
         <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
@@ -334,7 +336,7 @@
   <div class="seccion" id="sec-streetwear">
     <div class="pronto">
       <div class="pronto-icon">⚡</div>
-      <h2>Streetwear</h2>
+      <h2>Gorras y Accesorios</h2>
       <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
       <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
     </div>
@@ -459,7 +461,9 @@
     const productosMujer = [
       { id:4, nombre:"Polo Snoopy Howl", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-howl.png", linkYape:"#" },
       { id:5, nombre:"Polo Snoopy Mood", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"snoopy-mood.png", linkYape:"#" },
-      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:"#" }
+      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:"#" },
+      { id:11, nombre:"Polo Woodstock Travel", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-woodstock.png", linkYape:"#" },
+      { id:12, nombre:"Polo Mickey Mouse", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"polo-mickey.png", linkYape:"#" }
     ];
     renderCarrusel(productosMujer, 'gridMujer');
 
@@ -515,6 +519,18 @@
         color: "Negro",
         imagenes: ["polera-llegue-mockup.png", "polera-llegue-hombre.png", "polera-llegue-mujer.png"],
         linkYape: "#" // ← REEMPLAZA con tu link de Culqi
+      },
+      {
+        id: 13,
+        nombre: "Polera Peanuts E.T.",
+        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
+        precio: "S/ 75.00",
+        precioAnterior: null,
+        descuento: null,
+        tallas: ["S","M","L"],
+        color: "Negro",
+        imagen: "polera-peanuts-et.png",
+        linkYape: "#"
       }
     ];
 
