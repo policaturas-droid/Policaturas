@@ -10,6 +10,28 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
 
+    /* ── BARRA DE ANUNCIO ── */
+    .anuncio-bar{background:var(--gold);color:#0f0e0c;font-size:0.78rem;font-weight:500;letter-spacing:0.08em;text-align:center;padding:0.5rem 1rem;overflow:hidden;position:relative;height:36px}
+    .anuncio-track{display:flex;width:max-content;animation:scroll-anuncio 20s linear infinite}
+    .anuncio-track:hover{animation-play-state:paused}
+    .anuncio-item{padding:0 3rem;white-space:nowrap}
+    @keyframes scroll-anuncio{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* ── TOAST INSTAGRAM ── */
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1916;border:1px solid var(--gold);color:var(--text);padding:0.9rem 1.5rem;border-radius:8px;font-size:0.85rem;z-index:9999;opacity:0;transition:all 0.4s ease;pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,0.5)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* ── MÁS VENDIDOS ── */
+    .mas-vendidos{padding:3rem 5vw 4rem;border-bottom:1px solid var(--border)}
+    .mv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2rem}
+
+    /* ── CONFIANZA ── */
+    .confianza{padding:3rem 5vw;border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+    .confianza-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.6rem}
+    .confianza-icon{font-size:1.8rem}
+    .confianza-title{font-size:0.82rem;font-weight:500;color:var(--text);letter-spacing:0.04em}
+    .confianza-desc{font-size:0.73rem;color:var(--muted);line-height:1.5}
+
     header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px}
     .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);cursor:pointer}
     .logo span{color:var(--gold)}
@@ -129,8 +151,8 @@
     .footer-socials a:hover{color:var(--gold)}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}.catalog-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}}
-    @media(max-width:560px){.cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.modal-img{max-height:260px}}
+    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}.catalog-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}.confianza{grid-template-columns:repeat(2,1fr)}.mv-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.modal-img{max-height:260px}.confianza{grid-template-columns:1fr}.mv-grid{grid-template-columns:1fr}}
 
     /* CARRUSEL */
     .carousel{position:relative;overflow:hidden;background:#fff}
@@ -146,6 +168,26 @@
   </style>
 </head>
 <body>
+
+  <!-- BARRA DE ANUNCIO -->
+  <div class="anuncio-bar">
+    <div class="anuncio-track" id="anuncioTrack">
+      <span class="anuncio-item">🚚 Delivery incluido en todos los polos y poleras</span>
+      <span class="anuncio-item">💚 Paga fácil con Yape, Plin o tarjeta</span>
+      <span class="anuncio-item">✨ Estampado DTF premium — no despinta, tacto cero</span>
+      <span class="anuncio-item">📦 5 polos básicos por solo S/ 99 — ¡Aprovecha la promo!</span>
+      <span class="anuncio-item">📸 Escríbenos al Instagram @policaturass</span>
+      <!-- duplicado para loop continuo -->
+      <span class="anuncio-item">🚚 Delivery incluido en todos los polos y poleras</span>
+      <span class="anuncio-item">💚 Paga fácil con Yape, Plin o tarjeta</span>
+      <span class="anuncio-item">✨ Estampado DTF premium — no despinta, tacto cero</span>
+      <span class="anuncio-item">📦 5 polos básicos por solo S/ 99 — ¡Aprovecha la promo!</span>
+      <span class="anuncio-item">📸 Escríbenos al Instagram @policaturass</span>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">📋 Mensaje copiado — pégalo en Instagram</div>
 
   <header>
     <div class="logo" onclick="irA('inicio')">Poli<span>caturas</span></div>
@@ -174,6 +216,37 @@
         <span class="badge-info">📱 Billeteras digitales</span>
       </div>
     </section>
+
+    <!-- MÁS VENDIDOS -->
+    <section class="mas-vendidos">
+      <p class="section-label">— Los favoritos de nuestros clientes</p>
+      <h2 class="section-title">Más <em style="font-style:italic;color:var(--gold-light)">vendidos</em></h2>
+      <div class="mv-grid" id="gridMasVendidos"></div>
+    </section>
+
+    <!-- CONFIANZA -->
+    <div class="confianza">
+      <div class="confianza-item">
+        <div class="confianza-icon">🚚</div>
+        <div class="confianza-title">Delivery incluido</div>
+        <div class="confianza-desc">En todos los polos y poleras, Lima y provincias</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">💚</div>
+        <div class="confianza-title">Pago fácil</div>
+        <div class="confianza-desc">Yape, Plin, tarjeta y billeteras digitales</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">✨</div>
+        <div class="confianza-title">Calidad premium</div>
+        <div class="confianza-desc">Algodón pima reactivo, estampado DTF que no despinta</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">📸</div>
+        <div class="confianza-title">Atención rápida</div>
+        <div class="confianza-desc">Escríbenos al Instagram y te respondemos al instante</div>
+      </div>
+    </div>
 
     <section class="categories">
       <p class="section-label">— Explora por categoría</p>
@@ -388,7 +461,7 @@
         </div>
         <div class="modal-desc" id="modalDesc"></div>
         <div class="modal-actions">
-          <a class="btn btn-ig" id="modalIG" href="https://ig.me/m/policaturass" target="_blank">
+          <a class="btn btn-ig" id="modalIG" href="https://ig.me/m/policaturass" target="_blank" onclick="abrirInstagram(event)">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             Escribir al Instagram
           </a>
@@ -705,11 +778,42 @@
       productoActual = null;
     }
 
+    // ── INSTAGRAM CON MENSAJE PREDETERMINADO ──
+    function abrirInstagram(e) {
+      e.preventDefault();
+      if (!productoActual) return;
+      const talla = tallaSeleccionada ? ` Talla: ${tallaSeleccionada}.` : '';
+      const mensaje = `Hola, deseo comprar este producto por favor 🛍️\n\nProducto: ${productoActual.nombre}\nPrecio: ${productoActual.precio}${talla}\n\nGracias!`;
+      navigator.clipboard.writeText(mensaje).then(() => {
+        mostrarToast('📋 Mensaje copiado — pégalo en el chat de Instagram');
+      }).catch(() => {
+        mostrarToast('✍️ Abriendo Instagram...');
+      });
+      setTimeout(() => {
+        window.open('https://ig.me/m/policaturass', '_blank');
+      }, 600);
+    }
+
+    function mostrarToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
     function closeModalOutside(e) {
       if (e.target === document.getElementById('overlay')) cerrarModal();
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+    // ── MÁS VENDIDOS ──
+    const masVendidos = [
+      { ...productosHombre.find(p=>p.id===1) },   // Polo Homero TV
+      { ...productosMujer.find(p=>p.id===4) },     // Polo Snoopy Howl
+      { ...productosPoleras.find(p=>p.id===8) }    // Polera Llegué Tarde
+    ];
+    renderCarrusel(masVendidos, 'gridMasVendidos');
   </script>
 </body>
 </html>
