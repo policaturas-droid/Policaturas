@@ -7,8 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root{--bg:#0f0e0c;--surface:#1a1916;--card:#211f1c;--border:#2e2b27;--gold:#c9a84c;--gold-light:#e2c97e;--text:#f0ece4;--muted:#7a7568;--ig:#e1306c;--yape:#6c2fa0}
+    body.light{--bg:#f5f4f0;--surface:#eceae4;--card:#ffffff;--border:#ddd9d0;--gold:#b8922a;--gold-light:#9a7520;--text:#1a1816;--muted:#888070;--ig:#e1306c;--yape:#6c2fa0}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;transition:background 0.3s,color 0.3s}
+
+    /* ── TOGGLE DARK/LIGHT ── */
+    .theme-toggle{background:var(--surface);border:1px solid var(--border);color:var(--text);width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.2s;flex-shrink:0}
+    .theme-toggle:hover{border-color:var(--gold);color:var(--gold)}
 
     /* ── BARRA DE ANUNCIO ── */
     .anuncio-bar{background:var(--gold);color:#0f0e0c;font-size:0.78rem;font-weight:500;letter-spacing:0.08em;text-align:center;padding:0.5rem 1rem;overflow:hidden;position:relative;height:36px}
@@ -32,7 +37,8 @@
     .confianza-title{font-size:0.82rem;font-weight:500;color:var(--text);letter-spacing:0.04em}
     .confianza-desc{font-size:0.73rem;color:var(--muted);line-height:1.5}
 
-    header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px}
+    header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px;gap:1rem;transition:background 0.3s}
+    body.light header{background:rgba(245,244,240,0.95)}
     .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);cursor:pointer}
     .logo span{color:var(--gold)}
     nav{display:flex;gap:2rem;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
@@ -243,6 +249,7 @@
       <a onclick="irA('streetwear')" id="nav-streetwear">Gorras y Accesorios</a>
     </nav>
     <button class="cart-btn" title="Carrito">🛒</button>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema" onclick="toggleTema()">🌙</button>
   </header>
 
   <!-- INICIO -->
@@ -509,18 +516,18 @@
           </a>
           <!-- Botón yape normal (productos regulares) -->
           <a class="btn btn-yape" id="modalYape" href="#" target="_blank" onclick="validarTalla(event)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            Pagar con Yape
+            <span style="background:#fff;color:#6c2fa0;font-weight:900;font-size:0.9rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">Y</span>
+            Yape / 💳 Tarjeta
           </a>
           <!-- Botones de pago para promos (2 opciones) -->
           <div id="modalYapeDeliveryWrap" style="display:none;flex-direction:column;gap:0.6rem">
             <div class="btn-divider">— elige cómo pagar —</div>
             <a class="btn btn-yape" id="modalYapeSinDelivery" href="#" target="_blank" onclick="validarTalla(event)">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              Pagar S/ 99 · Sin delivery
+              <span style="background:#fff;color:#6c2fa0;font-weight:900;font-size:0.9rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">Y</span>
+              S/ 99 · Sin delivery
             </a>
             <a class="btn btn-yape-delivery" id="modalYapeConDelivery" href="#" target="_blank" onclick="validarTalla(event)">
-              🚚 Pagar S/ 110 · Con delivery Lima
+              🚚 S/ 110 · Con delivery Lima
             </a>
           </div>
         </div>
@@ -529,29 +536,21 @@
   </div>
 
   <script>
+    const LINK_POLOS = "https://express.culqi.com/pago/AAD9B3DC83";
+    const LINK_POLERAS = "https://express.culqi.com/pago/BABF813701";
+    const LINK_PROMO_SIN = "https://express.culqi.com/pago/CA97B68D29";
+    const LINK_PROMO_CON = "https://express.culqi.com/pago/BB85A81837";
+
     const productosHombre = [
-      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
-      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
-      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" },
-      { id:9, nombre:"Polo Tao Pai Pai", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["tao-pai-pai-front.png","tao-pai-pai-back.png"], linkYape:"#" },
-      { id:20, nombre:"Polo Itchy & Scratchy", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-itchy.png", linkYape:"#" }
+      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:LINK_POLOS },
+      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:LINK_POLOS },
+      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:LINK_POLOS },
+      { id:9, nombre:"Polo Tao Pai Pai", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["tao-pai-pai-front.png","tao-pai-pai-back.png"], linkYape:LINK_POLOS },
+      { id:20, nombre:"Polo Itchy & Scratchy", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-itchy.png", linkYape:LINK_POLOS }
     ];
 
     const productosPromos = [
-      {
-        id:10,
-        nombre:"Pack 5 Polos Básicos",
-        descripcion:"Algodón Jersey 20/1 reactivo. Elige 5 polos en los colores que prefieras. Delivery no incluido (S/ 11 adicional para Lima).",
-        precio:"S/ 99.00",
-        precioAnterior: null,
-        descuento:"🔥 PROMO",
-        tallas:["S","M","L"],
-        colores:["Blanco","Negro","Gris Melange","Beige","Azul Marino"],
-        imagen:"promo-polos.png",
-        esPromo: true,
-        linkYapeSinDelivery:"#", // ← REEMPLAZA con link Culqi S/99
-        linkYapeConDelivery:"#"  // ← REEMPLAZA con link Culqi S/110
-      }
+      { id:10, nombre:"Pack 5 Polos Básicos", descripcion:"Algodón Jersey 20/1 reactivo. Elige 5 polos en los colores que prefieras. Delivery no incluido (S/ 11 adicional para Lima).", precio:"S/ 99.00", precioAnterior:null, descuento:"🔥 PROMO", tallas:["S","M","L"], colores:["Blanco","Negro","Gris Melange","Beige","Azul Marino"], imagen:"promo-polos.png", esPromo:true, linkYapeSinDelivery:LINK_PROMO_SIN, linkYapeConDelivery:LINK_PROMO_CON }
     ];
 
     function renderGrid(productos, containerId) {
@@ -583,11 +582,11 @@
     renderCarrusel(productosHombre, 'gridHombre');
 
     const productosMujer = [
-      { id:4, nombre:"Polo Snoopy Howl", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-howl.png", linkYape:"#" },
-      { id:5, nombre:"Polo Snoopy Mood", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"snoopy-mood.png", linkYape:"#" },
-      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:"#" },
-      { id:11, nombre:"Polo Woodstock Travel", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-woodstock.png", linkYape:"#" },
-      { id:12, nombre:"Polo Mickey Mouse", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"polo-mickey.png", linkYape:"#" }
+      { id:4, nombre:"Polo Snoopy Howl", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-howl.png", linkYape:LINK_POLOS },
+      { id:5, nombre:"Polo Snoopy Mood", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagen:"snoopy-mood.png", linkYape:LINK_POLOS },
+      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:LINK_POLOS },
+      { id:11, nombre:"Polo Woodstock Travel", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-woodstock.png", linkYape:LINK_POLOS },
+      { id:12, nombre:"Polo Mickey Mouse", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 49.90", precioAnterior:"S/ 55.50", descuento:"10% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"polo-mickey.png", linkYape:LINK_POLOS }
     ];
     renderCarrusel(productosMujer, 'gridMujer');
 
@@ -620,9 +619,9 @@
     renderPromos(productosPromos, 'gridPromos');
 
     const productosPoleras = [
-      { id:7, nombre:"Polera Pokémon Ghost", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-haunter-mockup.png","polera-haunter-modelo.png"], linkYape:"#" },
-      { id:8, nombre:"Polera Llegué Tarde", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-llegue-mockup.png","polera-llegue-hombre.png","polera-llegue-mujer.png"], linkYape:"#" },
-      { id:13, nombre:"Polera Peanuts E.T.", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polera-peanuts-et.png", linkYape:"#" }
+      { id:7, nombre:"Polera Pokémon Ghost", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-haunter-mockup.png","polera-haunter-modelo.png"], linkYape:LINK_POLERAS },
+      { id:8, nombre:"Polera Llegué Tarde", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-llegue-mockup.png","polera-llegue-hombre.png","polera-llegue-mujer.png"], linkYape:LINK_POLERAS },
+      { id:13, nombre:"Polera Peanuts E.T.", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polera-peanuts-et.png", linkYape:LINK_POLERAS }
     ];
 
     function renderCarrusel(productos, containerId) {
@@ -819,6 +818,21 @@
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+    // ── TOGGLE DARK / LIGHT ──
+    function toggleTema() {
+      const body = document.body;
+      const btn = document.getElementById('themeToggle');
+      body.classList.toggle('light');
+      const esLight = body.classList.contains('light');
+      btn.textContent = esLight ? '🌑' : '🌙';
+      localStorage.setItem('tema', esLight ? 'light' : 'dark');
+    }
+    // Restaurar preferencia guardada
+    if (localStorage.getItem('tema') === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeToggle').textContent = '🌑';
+    }
 
     // ── SWIPE PARA CERRAR EN MÓVIL ──
     let touchStartY = 0;
