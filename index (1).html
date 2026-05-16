@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Policaturas — Tienda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#0f0e0c;--surface:#1a1916;--card:#211f1c;--border:#2e2b27;--gold:#c9a84c;--gold-light:#e2c97e;--text:#f0ece4;--muted:#7a7568;--ig:#e1306c;--yape:#6c2fa0}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
+
+    /* ── BARRA DE ANUNCIO ── */
+    .anuncio-bar{background:var(--gold);color:#0f0e0c;font-size:0.78rem;font-weight:500;letter-spacing:0.08em;text-align:center;padding:0.5rem 1rem;overflow:hidden;position:relative;height:36px}
+    .anuncio-track{display:flex;width:max-content;animation:scroll-anuncio 20s linear infinite}
+    .anuncio-track:hover{animation-play-state:paused}
+    .anuncio-item{padding:0 3rem;white-space:nowrap}
+    @keyframes scroll-anuncio{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* ── TOAST INSTAGRAM ── */
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1916;border:1px solid var(--gold);color:var(--text);padding:0.9rem 1.5rem;border-radius:8px;font-size:0.85rem;z-index:9999;opacity:0;transition:all 0.4s ease;pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,0.5)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* ── MÁS VENDIDOS ── */
+    .mas-vendidos{padding:3rem 5vw 4rem;border-bottom:1px solid var(--border)}
+    .mv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2rem}
+
+    /* ── CONFIANZA ── */
+    .confianza{padding:3rem 5vw;border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+    .confianza-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.6rem}
+    .confianza-icon{font-size:1.8rem}
+    .confianza-title{font-size:0.82rem;font-weight:500;color:var(--text);letter-spacing:0.04em}
+    .confianza-desc{font-size:0.73rem;color:var(--muted);line-height:1.5}
+
+    header{position:sticky;top:0;z-index:100;background:rgba(15,14,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px}
+    .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text);cursor:pointer}
+    .logo span{color:var(--gold)}
+    nav{display:flex;gap:2rem;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+    nav a{color:inherit;text-decoration:none;transition:color 0.2s;cursor:pointer}
+    nav a:hover,nav a.active{color:var(--gold)}
+    .cart-btn{background:transparent;border:1px solid var(--border);color:var(--text);width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:1.1rem}
+    .cart-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+    .seccion{display:none}
+    .seccion.activa{display:block}
+
+    .hero{padding:6rem 5vw 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+    .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 70%);pointer-events:none}
+    .hero-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1rem}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:900;line-height:1.05;max-width:700px;margin-bottom:1.5rem}
+    .hero h1 em{font-style:italic;color:var(--gold-light)}
+    .hero p{color:var(--muted);max-width:460px;line-height:1.7;font-size:0.95rem;margin-bottom:2rem}
+    .info-badges{display:flex;flex-wrap:wrap;gap:0.7rem}
+    .badge-info{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold-light);font-size:0.78rem;padding:0.45rem 1rem;border-radius:100px}
+
+    .categories{padding:4rem 5vw 5rem}
+    .section-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;margin-bottom:2.5rem}
+    .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+    .cat-card{border-radius:4px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;display:block}
+    .cat-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+    .cat-card:nth-child(1){animation-delay:.05s}.cat-card:nth-child(2){animation-delay:.10s}.cat-card:nth-child(3){animation-delay:.15s}.cat-card:nth-child(4){animation-delay:.20s}.cat-card:nth-child(5){animation-delay:.25s}.cat-card:nth-child(6){animation-delay:.30s}
+
+    /* Todas las imágenes de categoría con el mismo tratamiento */
+    .cat-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+    .cat-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;transition:transform 0.4s ease;display:block}
+    .cat-card:hover .cat-img-wrap img{transform:scale(1.04)}
+    .cat-img-wrap.hombre img{object-position:30% 15%}
+
+    .cat-placeholder{width:100%;aspect-ratio:4/5;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+    .cat-footer{padding:1.2rem 1.3rem;background:var(--card);display:flex;align-items:center;justify-content:space-between}
+    .cat-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
+    .cat-arrow{color:var(--gold);font-size:1.1rem;transition:transform 0.2s}
+    .cat-card:hover .cat-arrow{transform:translateX(5px)}
+
+    .catalog-header{padding:3rem 5vw 0}
+    .breadcrumb{font-size:0.78rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem}
+    .breadcrumb span{cursor:pointer;transition:color 0.2s}
+    .breadcrumb span:hover{color:var(--gold)}
+    .breadcrumb-sep{color:var(--border)}
+    .catalog-hero{padding:0 5vw 2rem;border-bottom:1px solid var(--border)}
+    .catalog-hero h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;margin-bottom:1rem}
+    .catalog-hero h2 em{font-style:italic;color:var(--gold-light)}
+    .catalog-grid{padding:2.5rem 5vw 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,box-shadow 0.3s;animation:fadeUp 0.5s ease both;cursor:pointer}
+    .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+    .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.10s}.card:nth-child(3){animation-delay:.15s}
+    .card-img-wrap{position:relative;overflow:hidden;background:#fff;padding:10px}
+    .card-img-wrap img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;transition:transform 0.4s ease}
+    .card:hover .card-img-wrap img{transform:scale(1.03)}
+    .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.68rem;font-weight:700;padding:0.28rem 0.65rem;border-radius:2px}
+    .card-body{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
+    .card-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
+    .card-color{font-size:0.73rem;color:var(--muted)}
+    .sizes-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
+    .sizes{display:flex;gap:0.4rem;flex-wrap:wrap}
+    .size-tag{border:1px solid var(--gold);color:var(--gold-light);font-size:0.72rem;padding:0.25rem 0.6rem;border-radius:2px;font-weight:500}
+    .price-wrap{display:flex;align-items:baseline;gap:0.6rem}
+    .card-price{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--gold-light)}
+    .card-price-old{font-size:0.82rem;color:var(--muted);text-decoration:line-through}
+    .btn-comprar{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.72rem;border-radius:3px;border:none;cursor:pointer;background:var(--gold);color:#0f0e0c;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
+    .btn-comprar:hover{background:var(--gold-light);transform:scale(1.02)}
+
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
+    .overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--card);border:1px solid var(--border);border-radius:6px;max-width:800px;width:100%;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;transform:translateY(24px);transition:transform 0.3s}
+    .overlay.open .modal{transform:translateY(0)}
+    .modal-img{background:#fff;padding:20px;display:flex;align-items:center;justify-content:center}
+    .modal-img img{width:100%;max-height:460px;object-fit:contain;display:block}
+    .modal-body{padding:2rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
+    .modal-top{display:flex;justify-content:flex-end}
+    .modal-close{background:transparent;border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+    .modal-close:hover{border-color:var(--text);color:var(--text)}
+    .modal-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1.2}
+    .modal-color{font-size:0.8rem;color:var(--muted)}
+    .modal-price-wrap{display:flex;align-items:baseline;gap:0.7rem}
+    .modal-price{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold-light)}
+    .modal-price-old{font-size:1rem;color:var(--muted);text-decoration:line-through}
+    .talla-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+    .tallas-select{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .talla-btn{border:1px solid var(--border);background:transparent;color:var(--muted);font-size:0.8rem;font-weight:500;padding:0.4rem 0.9rem;border-radius:3px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+    .talla-btn:hover{border-color:var(--gold);color:var(--gold-light)}
+    .talla-btn.selected{background:var(--gold);border-color:var(--gold);color:#0f0e0c;font-weight:600}
+    .talla-aviso{font-size:0.72rem;color:#e53935;display:none;margin-top:0.2rem}
+    .talla-aviso.visible{display:block}
+    .modal-desc{font-size:0.87rem;color:var(--muted);line-height:1.7}
+    .modal-desc strong{color:var(--gold-light);font-weight:500}
+    .modal-actions{display:flex;flex-direction:column;gap:0.6rem;margin-top:auto}
+    .btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.85rem;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s}
+    .btn-ig{background:var(--ig);color:#fff}
+    .btn-ig:hover{background:#c0275c}
+    .btn-yape{background:var(--yape);color:#fff}
+    .btn-yape:hover{background:#5a2588}
+    .btn-yape-delivery{background:#4a1f70;color:#fff;border:1px dashed rgba(255,255,255,0.3)}
+    .btn-yape-delivery:hover{background:#3d1a5e}
+    .btn-divider{font-size:0.68rem;color:var(--muted);text-align:center;letter-spacing:0.1em;text-transform:uppercase}
+
+    .pronto{padding:6rem 5vw;text-align:center}
+    .pronto-icon{font-size:4rem;margin-bottom:1.5rem}
+    .pronto h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:1rem}
+    .pronto p{color:var(--muted);font-size:0.95rem;margin-bottom:2rem}
+    .btn-volver{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:#0f0e0c;padding:0.7rem 1.5rem;border-radius:3px;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.2s}
+    .btn-volver:hover{background:var(--gold-light)}
+
+    footer{border-top:1px solid var(--border);padding:2.5rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:0.8rem}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--text)}
+    .footer-logo span{color:var(--gold)}
+    .footer-socials{display:flex;gap:1.2rem}
+    .footer-socials a{color:var(--muted);text-decoration:none;transition:color 0.2s;display:flex;align-items:center;gap:0.4rem;font-size:0.8rem}
+    .footer-socials a:hover{color:var(--gold)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}.catalog-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}.confianza{grid-template-columns:repeat(2,1fr)}.mv-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.modal-img{max-height:260px}.confianza{grid-template-columns:1fr}.mv-grid{grid-template-columns:1fr}}
+
+    /* CARRUSEL */
+    .carousel{position:relative;overflow:hidden;background:#fff}
+    .carousel-track{display:flex;transition:transform 0.4s ease}
+    .carousel-track img{width:100%;flex-shrink:0;aspect-ratio:1/1;object-fit:contain;display:block;padding:10px}
+    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:2}
+    .carousel-btn:hover{background:rgba(0,0,0,0.7)}
+    .carousel-btn.prev{left:8px}
+    .carousel-btn.next{right:8px}
+    .carousel-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+    .carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,0.25);cursor:pointer;transition:background 0.2s}
+    .carousel-dot.active{background:var(--gold)}
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE ANUNCIO -->
+  <div class="anuncio-bar">
+    <div class="anuncio-track" id="anuncioTrack">
+      <span class="anuncio-item">🚚 Delivery incluido en todos los polos y poleras</span>
+      <span class="anuncio-item">💚 Paga fácil con Yape, Plin o tarjeta</span>
+      <span class="anuncio-item">✨ Estampado DTF premium — no despinta, tacto cero</span>
+      <span class="anuncio-item">📦 5 polos básicos por solo S/ 99 — ¡Aprovecha la promo!</span>
+      <span class="anuncio-item">📸 Escríbenos al Instagram @policaturass</span>
+      <!-- duplicado para loop continuo -->
+      <span class="anuncio-item">🚚 Delivery incluido en todos los polos y poleras</span>
+      <span class="anuncio-item">💚 Paga fácil con Yape, Plin o tarjeta</span>
+      <span class="anuncio-item">✨ Estampado DTF premium — no despinta, tacto cero</span>
+      <span class="anuncio-item">📦 5 polos básicos por solo S/ 99 — ¡Aprovecha la promo!</span>
+      <span class="anuncio-item">📸 Escríbenos al Instagram @policaturass</span>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">📋 Mensaje copiado — pégalo en Instagram</div>
+
+  <header>
+    <div class="logo" onclick="irA('inicio')">Poli<span>caturas</span></div>
+    <nav>
+      <a onclick="irA('inicio')" id="nav-inicio" class="active">Inicio</a>
+      <a onclick="irA('polos-hombre')" id="nav-polos-hombre">Hombre</a>
+      <a onclick="irA('mujer')" id="nav-mujer">Mujer</a>
+      <a onclick="irA('ninos')" id="nav-ninos">Niños</a>
+      <a onclick="irA('poleras')" id="nav-poleras">Poleras</a>
+      <a onclick="irA('oversize')" id="nav-oversize">🔥 Promos</a>
+      <a onclick="irA('streetwear')" id="nav-streetwear">Gorras y Accesorios</a>
+    </nav>
+    <button class="cart-btn" title="Carrito">🛒</button>
+  </header>
+
+  <!-- INICIO -->
+  <div class="seccion activa" id="sec-inicio">
+    <section class="hero">
+      <span class="hero-label">Bienvenido a Policaturas</span>
+      <h1>Moda que <em>expresa</em><br>quién eres.</h1>
+      <p>Polos y poleras con diseños únicos. 100% algodón pima reactivo, estampado DTF de alta calidad, suave al tacto y que no despinta.</p>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Pagos con tarjeta</span>
+        <span class="badge-info">💚 Yape y Plin</span>
+        <span class="badge-info">📱 Billeteras digitales</span>
+      </div>
+    </section>
+
+    <!-- MÁS VENDIDOS -->
+    <section class="mas-vendidos">
+      <p class="section-label">— Los favoritos de nuestros clientes</p>
+      <h2 class="section-title">Más <em style="font-style:italic;color:var(--gold-light)">vendidos</em></h2>
+      <div class="mv-grid" id="gridMasVendidos"></div>
+    </section>
+
+    <!-- CONFIANZA -->
+    <div class="confianza">
+      <div class="confianza-item">
+        <div class="confianza-icon">🚚</div>
+        <div class="confianza-title">Delivery incluido</div>
+        <div class="confianza-desc">En todos los polos y poleras, Lima y provincias</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">💚</div>
+        <div class="confianza-title">Pago fácil</div>
+        <div class="confianza-desc">Yape, Plin, tarjeta y billeteras digitales</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">✨</div>
+        <div class="confianza-title">Calidad premium</div>
+        <div class="confianza-desc">Algodón pima reactivo, estampado DTF que no despinta</div>
+      </div>
+      <div class="confianza-item">
+        <div class="confianza-icon">📸</div>
+        <div class="confianza-title">Atención rápida</div>
+        <div class="confianza-desc">Escríbenos al Instagram y te respondemos al instante</div>
+      </div>
+    </div>
+
+    <section class="categories">
+      <p class="section-label">— Explora por categoría</p>
+      <h2 class="section-title">¿Qué estás buscando?</h2>
+      <div class="cat-grid">
+
+        <!-- cat-hombre.png = chico azul marino → nombre: Polos Hombre ✅ -->
+        <div class="cat-card" onclick="irA('polos-hombre')">
+          <div class="cat-img-wrap hombre">
+            <img src="cat-hombre.png" alt="Polos Hombre" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Polos Hombre</span><span class="cat-arrow">→</span></div>
+        </div>
+
+        <!-- cat-ninos.png = niño polo blanco → nombre: Polos Mujer (swap de nombre) ✅ -->
+        <div class="cat-card" onclick="irA('mujer')">
+          <div class="cat-img-wrap">
+            <img src="cat-ninos.png" alt="Polos Mujer" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Polos Mujer</span><span class="cat-arrow">→</span></div>
+        </div>
+
+        <!-- cat-mujer.png = chica polo marrón → nombre: Polos Niños (swap de nombre) ✅ -->
+        <div class="cat-card" onclick="irA('ninos')">
+          <div class="cat-img-wrap">
+            <img src="cat-mujer.png" alt="Polos Niños" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Polos Niños</span><span class="cat-arrow">→</span></div>
+        </div>
+
+        <div class="cat-card" onclick="irA('oversize')">
+          <div class="cat-img-wrap">
+            <img src="promo-banner.png" alt="Promos" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">🔥 Promos</span><span class="cat-arrow">→</span></div>
+        </div>
+
+        <!-- cat-poleras.png = chico hoodie verde → Poleras ✅ -->
+        <div class="cat-card" onclick="irA('poleras')">
+          <div class="cat-img-wrap">
+            <img src="cat-poleras.png" alt="Poleras" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Poleras</span><span class="cat-arrow">→</span></div>
+        </div>
+
+        <div class="cat-card" onclick="irA('streetwear')">
+          <div class="cat-img-wrap">
+            <img src="cat-gorras.png" alt="Gorras y Accesorios" />
+          </div>
+          <div class="cat-footer"><span class="cat-name">Gorras y Accesorios</span><span class="cat-arrow">→</span></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- POLOS HOMBRE -->
+  <div class="seccion" id="sec-polos-hombre">
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Polos Hombre</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>Polos <em>Hombre</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">🎁 Delivery incluido en el precio</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridHombre"></div>
+    <div style="padding:0 5vw 4rem">
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- MUJER -->
+  <div class="seccion" id="sec-mujer">
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Polos Mujer</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>Polos <em>Mujer</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">🎁 Delivery incluido en el precio</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridMujer"></div>
+    <div style="padding:0 5vw 4rem">
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- NIÑOS -->
+  <div class="seccion" id="sec-ninos">
+    <div class="pronto">
+      <div class="pronto-icon">🧒</div>
+      <h2>Polos Niños</h2>
+      <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- PROMOS -->
+  <div class="seccion" id="sec-oversize">
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Promos</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>🔥 <em>Promos</em></h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">📦 Delivery no incluido en esta promo</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridPromos"></div>
+    <div style="padding:0 5vw 4rem">
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- POLERAS -->
+  <div class="seccion" id="sec-poleras">
+    <div class="catalog-header">
+      <div class="breadcrumb">
+        <span onclick="irA('inicio')">Inicio</span>
+        <span class="breadcrumb-sep">›</span>
+        <span style="color:var(--text)">Poleras</span>
+      </div>
+    </div>
+    <div class="catalog-hero">
+      <h2>Poleras</h2>
+      <div class="info-badges">
+        <span class="badge-info">🚚 Envíos a Lima y provincias</span>
+        <span class="badge-info">💳 Tarjeta, Yape y Plin</span>
+        <span class="badge-info">🎁 Delivery incluido en el precio</span>
+      </div>
+    </div>
+    <div class="catalog-grid" id="gridPoleras"></div>
+    <div style="padding:0 5vw 4rem">
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- STREETWEAR -->
+  <div class="seccion" id="sec-streetwear">
+    <div class="pronto">
+      <div class="pronto-icon">⚡</div>
+      <h2>Gorras y Accesorios</h2>
+      <p>Próximamente nuevos diseños. ¡Síguenos en Instagram para enterarte primero!</p>
+      <button class="btn-volver" onclick="irA('inicio')">← Volver al inicio</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Poli<span>caturas</span></div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/policaturass" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        @policaturass
+      </a>
+      <a href="https://tiktok.com/@policaturas" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
+        TikTok
+      </a>
+      <a href="https://facebook.com/Policaturas" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+    </div>
+    <div>© 2026 Policaturas · Lima, Perú</div>
+  </footer>
+
+  <!-- MODAL -->
+  <div class="overlay" id="overlay" onclick="closeModalOutside(event)">
+    <div class="modal" id="modal">
+      <div class="modal-img"><img id="modalImg" src="" alt="" /></div>
+      <div class="modal-body">
+        <div class="modal-top">
+          <button class="modal-close" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-color" id="modalColor"></div>
+        <div class="modal-price-wrap">
+          <div class="modal-price" id="modalPrice"></div>
+          <div class="modal-price-old" id="modalPriceOld"></div>
+        </div>
+        <div>
+          <div class="talla-label">Selecciona tu talla</div>
+          <div class="tallas-select" id="modalTallas"></div>
+          <div class="talla-aviso" id="tallaAviso">⚠ Por favor selecciona una talla antes de continuar</div>
+        </div>
+        <!-- Selector de colores para promos -->
+        <div id="modalColoresWrap" style="display:none">
+          <div class="talla-label" style="margin-bottom:0.5rem">Colores disponibles</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem" id="modalColores"></div>
+          <div style="font-size:0.72rem;color:var(--muted)">Indica los 5 colores que deseas al escribirnos 👆</div>
+        </div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-actions">
+          <a class="btn btn-ig" id="modalIG" href="https://ig.me/m/policaturass" target="_blank" onclick="abrirInstagram(event)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Escribir al Instagram
+          </a>
+          <!-- Botón yape normal (productos regulares) -->
+          <a class="btn btn-yape" id="modalYape" href="#" target="_blank" onclick="validarTalla(event)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Pagar con Yape
+          </a>
+          <!-- Botones de pago para promos (2 opciones) -->
+          <div id="modalYapeDeliveryWrap" style="display:none;flex-direction:column;gap:0.6rem">
+            <div class="btn-divider">— elige cómo pagar —</div>
+            <a class="btn btn-yape" id="modalYapeSinDelivery" href="#" target="_blank" onclick="validarTalla(event)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Pagar S/ 99 · Sin delivery
+            </a>
+            <a class="btn btn-yape-delivery" id="modalYapeConDelivery" href="#" target="_blank" onclick="validarTalla(event)">
+              🚚 Pagar S/ 110 · Con delivery Lima
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const productosHombre = [
+      { id:1, nombre:"Polo Homero TV", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"homer.png", linkYape:"#" },
+      { id:2, nombre:"Polo Antisocial Club", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"antisocial.png", linkYape:"#" },
+      { id:3, nombre:"Polo Bartman", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Azul Marino", imagen:"bartman.png", linkYape:"#" },
+      { id:9, nombre:"Polo Tao Pai Pai", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["tao-pai-pai-front.png","tao-pai-pai-back.png"], linkYape:"#" },
+      { id:20, nombre:"Polo Itchy & Scratchy", descripcion:"100% algodón pima reactivo (no despinta), corte regular unisex, estampado DTF de excelente calidad, acabado suave al tacto.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-itchy.png", linkYape:"#" }
+    ];
+
+    const productosPromos = [
+      {
+        id:10,
+        nombre:"Pack 5 Polos Básicos",
+        descripcion:"Algodón Jersey 20/1 reactivo. Elige 5 polos en los colores que prefieras. Delivery no incluido (S/ 11 adicional para Lima).",
+        precio:"S/ 99.00",
+        precioAnterior: null,
+        descuento:"🔥 PROMO",
+        tallas:["S","M","L"],
+        colores:["Blanco","Negro","Gris Melange","Beige","Azul Marino"],
+        imagen:"promo-polos.png",
+        esPromo: true,
+        linkYapeSinDelivery:"#", // ← REEMPLAZA con link Culqi S/99
+        linkYapeConDelivery:"#"  // ← REEMPLAZA con link Culqi S/110
+      }
+    ];
+
+    function renderGrid(productos, containerId) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = '';
+      productos.forEach(p => {
+        grid.innerHTML += `
+          <div class="card" onclick="abrirModal(${p.id})">
+            <div class="card-img-wrap">
+              <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
+              <span class="badge-oferta">🏷 ${p.descuento}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-name">${p.nombre}</div>
+              <div class="card-color">Color: ${p.color}</div>
+              <div>
+                <div class="sizes-label">Tallas</div>
+                <div class="sizes">${p.tallas.map(t=>`<span class="size-tag">${t}</span>`).join('')}</div>
+              </div>
+              <div class="price-wrap">
+                <div class="card-price">${p.precio}</div>
+                <div class="card-price-old">${p.precioAnterior}</div>
+              </div>
+              <button class="btn-comprar">🛒 Comprar</button>
+            </div>
+          </div>`;
+      });
+    }
+    renderCarrusel(productosHombre, 'gridHombre');
+
+    const productosMujer = [
+      { id:4, nombre:"Polo Snoopy Howl", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-howl.png", linkYape:"#" },
+      { id:5, nombre:"Polo Snoopy Mood", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"snoopy-mood.png", linkYape:"#" },
+      { id:6, nombre:"Polo Snoopy Comic", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"snoopy-comic.png", linkYape:"#" },
+      { id:11, nombre:"Polo Woodstock Travel", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polo-woodstock.png", linkYape:"#" },
+      { id:12, nombre:"Polo Mickey Mouse", descripcion:"100% algodón pima, corte princesa, estampado DTF de excelente calidad, tacto cero.", precio:"S/ 47.00", precioAnterior:"S/ 55.00", descuento:"15% OFF", tallas:["S","M","L"], color:"Blanco", imagen:"polo-mickey.png", linkYape:"#" }
+    ];
+    renderCarrusel(productosMujer, 'gridMujer');
+
+    function renderPromos(productos, containerId) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = '';
+      productos.forEach(p => {
+        grid.innerHTML += `
+          <div class="card" onclick="abrirModal(${p.id})">
+            <div class="card-img-wrap">
+              <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
+              <span class="badge-oferta">🔥 PROMO</span>
+            </div>
+            <div class="card-body">
+              <div class="card-name">${p.nombre}</div>
+              <div class="card-color" style="font-size:0.72rem">Colores: ${p.colores.join(' · ')}</div>
+              <div>
+                <div class="sizes-label">Tallas</div>
+                <div class="sizes">${p.tallas.map(t=>`<span class="size-tag">${t}</span>`).join('')}</div>
+              </div>
+              <div class="price-wrap">
+                <div class="card-price">${p.precio}</div>
+                <div style="font-size:0.73rem;color:var(--muted)">5 polos · delivery no incluido</div>
+              </div>
+              <button class="btn-comprar">🛒 Comprar promo</button>
+            </div>
+          </div>`;
+      });
+    }
+    renderPromos(productosPromos, 'gridPromos');
+
+    const productosPoleras = [
+      {
+        id: 7,
+        nombre: "Polera Pokémon Ghost",
+        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
+        precio: "S/ 75.00",
+        precioAnterior: null,
+        descuento: null,
+        tallas: ["S","M","L"],
+        color: "Negro",
+        imagenes: ["polera-haunter-mockup.png", "polera-haunter-modelo.png"],
+        linkYape: "#"
+      },
+      {
+        id: 8,
+        nombre: "Polera Llegué Tarde",
+        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
+        precio: "S/ 75.00",
+        precioAnterior: null,
+        descuento: null,
+        tallas: ["S","M","L"],
+        color: "Negro",
+        imagenes: ["polera-llegue-mockup.png", "polera-llegue-hombre.png", "polera-llegue-mujer.png"],
+        linkYape: "#" // ← REEMPLAZA con tu link de Culqi
+      },
+      {
+        id: 13,
+        nombre: "Polera Peanuts E.T.",
+        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
+        precio: "S/ 75.00",
+        precioAnterior: null,
+        descuento: null,
+        tallas: ["S","M","L"],
+        color: "Negro",
+        imagen: "polera-peanuts-et.png",
+        linkYape: "#"
+      }
+    ];
+
+    function renderCarrusel(productos, containerId) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = '';
+      productos.forEach(p => {
+        const imgs = p.imagenes || [p.imagen];
+        const carruselId = 'car-' + p.id;
+        grid.innerHTML += `
+          <div class="card" onclick="abrirModal(${p.id})">
+            <div class="carousel" id="${carruselId}">
+              <div class="carousel-track" id="${carruselId}-track">
+                ${imgs.map(i => `<img src="${i}" alt="${p.nombre}" loading="lazy" />`).join('')}
+              </div>
+              ${imgs.length > 1 ? `
+                <button class="carousel-btn prev" onclick="moverCarrusel(event,'${carruselId}',-1)">‹</button>
+                <button class="carousel-btn next" onclick="moverCarrusel(event,'${carruselId}',1)">›</button>
+                <div class="carousel-dots">
+                  ${imgs.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="irASlide(event,'${carruselId}',${i})"></div>`).join('')}
+                </div>` : ''}
+            </div>
+            <div class="card-body">
+              <div class="card-name">${p.nombre}</div>
+              <div class="card-color">Color: ${p.color}</div>
+              <div>
+                <div class="sizes-label">Tallas</div>
+                <div class="sizes">${p.tallas.map(t=>`<span class="size-tag">${t}</span>`).join('')}</div>
+              </div>
+              <div class="price-wrap">
+                <div class="card-price">${p.precio}</div>
+              </div>
+              <button class="btn-comprar">🛒 Comprar</button>
+            </div>
+          </div>`;
+      });
+    }
+    renderCarrusel(productosPoleras, 'gridPoleras');
+
+    // Estado de carruseles
+    const carruselState = {};
+    function moverCarrusel(e, id, dir) {
+      e.stopPropagation();
+      const track = document.getElementById(id + '-track');
+      const total = track.children.length;
+      if (!carruselState[id]) carruselState[id] = 0;
+      carruselState[id] = (carruselState[id] + dir + total) % total;
+      actualizarCarrusel(id, total);
+    }
+    function irASlide(e, id, idx) {
+      e.stopPropagation();
+      const track = document.getElementById(id + '-track');
+      carruselState[id] = idx;
+      actualizarCarrusel(id, track.children.length);
+    }
+    function actualizarCarrusel(id, total) {
+      const idx = carruselState[id];
+      document.getElementById(id + '-track').style.transform = `translateX(-${idx * 100}%)`;
+      document.querySelectorAll(`#${id} .carousel-dot`).forEach((d,i) => {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+
+    const todosLosProductos = [...productosHombre, ...productosMujer, ...productosPromos, ...productosPoleras];
+
+    function irA(seccion) {
+      document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      const sec = document.getElementById('sec-' + seccion);
+      if (sec) sec.classList.add('activa');
+      const nav = document.getElementById('nav-' + seccion);
+      if (nav) nav.classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    let tallaSeleccionada = null;
+    let productoActual = null;
+
+    function abrirModal(id) {
+      const p = todosLosProductos.find(x => x.id === id);
+      productoActual = p;
+      tallaSeleccionada = null;
+
+      // Imagen/carrusel en modal
+      const modalImgWrap = document.querySelector('.modal-img');
+      if (p.imagenes && p.imagenes.length > 1) {
+        carruselState['modal-car'] = 0;
+        modalImgWrap.innerHTML = `
+          <div class="carousel" id="modal-car" style="width:100%;height:100%">
+            <div class="carousel-track" id="modal-car-track">
+              ${p.imagenes.map(i=>`<img src="${i}" alt="${p.nombre}" style="width:100%;flex-shrink:0;aspect-ratio:1/1;object-fit:contain;padding:20px;background:#fff" />`).join('')}
+            </div>
+            <button class="carousel-btn prev" onclick="moverCarrusel(event,'modal-car',-1)">‹</button>
+            <button class="carousel-btn next" onclick="moverCarrusel(event,'modal-car',1)">›</button>
+            <div class="carousel-dots">
+              ${p.imagenes.map((_,i)=>`<div class="carousel-dot ${i===0?'active':''}" onclick="irASlide(event,'modal-car',${i})"></div>`).join('')}
+            </div>
+          </div>`;
+      } else {
+        modalImgWrap.innerHTML = `<img id="modalImg" src="${p.imagen || (p.imagenes && p.imagenes[0])}" alt="${p.nombre}" style="width:100%;max-height:460px;object-fit:contain;display:block" />`;
+      }
+
+      document.getElementById('modalName').textContent = p.nombre;
+      document.getElementById('modalPrice').textContent = p.precio;
+      document.getElementById('tallaAviso').classList.remove('visible');
+
+      const deliveryNote = p.esPromo
+        ? ' <strong>📦 Delivery no incluido. +S/ 11 para Lima.</strong>'
+        : ' <strong>🚚 El precio incluye delivery.</strong>';
+      document.getElementById('modalDesc').innerHTML = p.descripcion + deliveryNote;
+
+      const coloresWrap = document.getElementById('modalColoresWrap');
+      if (p.esPromo) {
+        document.getElementById('modalColor').textContent = '';
+        coloresWrap.style.display = 'block';
+        const colorMap = {'Blanco':'#ffffff','Negro':'#1a1a1a','Gris Melange':'#b0b0b0','Beige':'#e8d5b7','Azul Marino':'#1a2a4a'};
+        document.getElementById('modalColores').innerHTML = p.colores.map(c =>
+          `<span title="${c}" style="width:28px;height:28px;border-radius:50%;background:${colorMap[c]};border:2px solid var(--border);display:inline-block"></span>`
+        ).join('') + '<span style="font-size:0.75rem;color:var(--muted);align-self:center;margin-left:0.4rem">Blanco · Negro · Gris Melange · Beige · Azul Marino</span>';
+      } else {
+        document.getElementById('modalColor').textContent = 'Color: ' + p.color;
+        coloresWrap.style.display = 'none';
+      }
+
+      document.getElementById('modalPriceOld').textContent = p.precioAnterior || '';
+
+      document.getElementById('modalTallas').innerHTML = p.tallas.map(t =>
+        `<button class="talla-btn" onclick="seleccionarTalla(this,'${t}')">${t}</button>`
+      ).join('');
+
+      const yapeNormal = document.getElementById('modalYape');
+      const yapeDeliveryWrap = document.getElementById('modalYapeDeliveryWrap');
+      if (p.esPromo) {
+        yapeNormal.style.display = 'none';
+        yapeDeliveryWrap.style.display = 'flex';
+        document.getElementById('modalYapeSinDelivery').href = p.linkYapeSinDelivery;
+        document.getElementById('modalYapeConDelivery').href = p.linkYapeConDelivery;
+      } else {
+        yapeNormal.style.display = 'flex';
+        yapeDeliveryWrap.style.display = 'none';
+        yapeNormal.href = p.linkYape;
+      }
+
+      document.getElementById('overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function seleccionarTalla(btn, talla) {
+      document.querySelectorAll('.talla-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      tallaSeleccionada = talla;
+      document.getElementById('tallaAviso').classList.remove('visible');
+    }
+
+    function validarTalla(e) {
+      if (!tallaSeleccionada) { e.preventDefault(); document.getElementById('tallaAviso').classList.add('visible'); }
+    }
+
+    function cerrarModal() {
+      document.getElementById('overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      tallaSeleccionada = null;
+      productoActual = null;
+    }
+
+    // ── INSTAGRAM CON MENSAJE PREDETERMINADO ──
+    function abrirInstagram(e) {
+      e.preventDefault();
+      if (!productoActual) return;
+      const talla = tallaSeleccionada ? ` Talla: ${tallaSeleccionada}.` : '';
+      const mensaje = `Hola, deseo comprar este producto por favor 🛍️\n\nProducto: ${productoActual.nombre}\nPrecio: ${productoActual.precio}${talla}\n\nGracias!`;
+      navigator.clipboard.writeText(mensaje).then(() => {
+        mostrarToast('📋 Mensaje copiado — pégalo en el chat de Instagram');
+      }).catch(() => {
+        mostrarToast('✍️ Abriendo Instagram...');
+      });
+      setTimeout(() => {
+        window.open('https://ig.me/m/policaturass', '_blank');
+      }, 600);
+    }
+
+    function mostrarToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    function closeModalOutside(e) {
+      if (e.target === document.getElementById('overlay')) cerrarModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+    // ── MÁS VENDIDOS ──
+    const masVendidos = [
+      { ...productosHombre.find(p=>p.id===1) },   // Polo Homero TV
+      { ...productosMujer.find(p=>p.id===4) },     // Polo Snoopy Howl
+      { ...productosPoleras.find(p=>p.id===8) }    // Polera Llegué Tarde
+    ];
+    renderCarrusel(masVendidos, 'gridMasVendidos');
+  </script>
+</body>
+</html>
