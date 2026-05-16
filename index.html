@@ -42,7 +42,8 @@
     .cart-btn:hover{border-color:var(--gold);color:var(--gold)}
 
     .seccion{display:none}
-    .seccion.activa{display:block}
+    .seccion.activa{display:block;animation:fadeIn 0.35s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
     .hero{padding:6rem 5vw 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 70%);pointer-events:none}
@@ -87,7 +88,7 @@
     .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
     .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.10s}.card:nth-child(3){animation-delay:.15s}
     .card-img-wrap{position:relative;overflow:hidden;background:#fff;padding:10px}
-    .card-img-wrap img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;transition:transform 0.4s ease}
+    .card-img-wrap img{width:100%;aspect-ratio:4/5;object-fit:contain;display:block;transition:transform 0.4s ease}
     .card:hover .card-img-wrap img{transform:scale(1.03)}
     .badge-oferta{position:absolute;top:10px;left:10px;background:#e53935;color:#fff;font-size:0.68rem;font-weight:700;padding:0.28rem 0.65rem;border-radius:2px}
     .card-body{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
@@ -619,42 +620,9 @@
     renderPromos(productosPromos, 'gridPromos');
 
     const productosPoleras = [
-      {
-        id: 7,
-        nombre: "Polera Pokémon Ghost",
-        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
-        precio: "S/ 75.00",
-        precioAnterior: null,
-        descuento: null,
-        tallas: ["S","M","L"],
-        color: "Negro",
-        imagenes: ["polera-haunter-mockup.png", "polera-haunter-modelo.png"],
-        linkYape: "#"
-      },
-      {
-        id: 8,
-        nombre: "Polera Llegué Tarde",
-        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
-        precio: "S/ 75.00",
-        precioAnterior: null,
-        descuento: null,
-        tallas: ["S","M","L"],
-        color: "Negro",
-        imagenes: ["polera-llegue-mockup.png", "polera-llegue-hombre.png", "polera-llegue-mujer.png"],
-        linkYape: "#" // ← REEMPLAZA con tu link de Culqi
-      },
-      {
-        id: 13,
-        nombre: "Polera Peanuts E.T.",
-        descripcion: "Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.",
-        precio: "S/ 75.00",
-        precioAnterior: null,
-        descuento: null,
-        tallas: ["S","M","L"],
-        color: "Negro",
-        imagen: "polera-peanuts-et.png",
-        linkYape: "#"
-      }
+      { id:7, nombre:"Polera Pokémon Ghost", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-haunter-mockup.png","polera-haunter-modelo.png"], linkYape:"#" },
+      { id:8, nombre:"Polera Llegué Tarde", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagenes:["polera-llegue-mockup.png","polera-llegue-hombre.png","polera-llegue-mujer.png"], linkYape:"#" },
+      { id:13, nombre:"Polera Peanuts E.T.", descripcion:"Algodón franelado reactivo (no despinta), estampado DTF de excelente calidad, tacto cero. Corte unisex.", precio:"S/ 75.00", precioAnterior:"S/ 84.00", descuento:"11% OFF", tallas:["S","M","L"], color:"Negro", imagen:"polera-peanuts-et.png", linkYape:"#" }
     ];
 
     function renderCarrusel(productos, containerId) {
@@ -663,12 +631,15 @@
       productos.forEach(p => {
         const imgs = p.imagenes || [p.imagen];
         const carruselId = 'car-' + p.id;
+        const badgeHtml = p.descuento ? `<span class="badge-oferta">🏷 ${p.descuento}</span>` : '';
+        const precioViejoHtml = p.precioAnterior ? `<div class="card-price-old">${p.precioAnterior}</div>` : '';
         grid.innerHTML += `
           <div class="card" onclick="abrirModal(${p.id})">
-            <div class="carousel" id="${carruselId}">
+            <div class="carousel" id="${carruselId}" style="position:relative;background:#fff">
               <div class="carousel-track" id="${carruselId}-track">
-                ${imgs.map(i => `<img src="${i}" alt="${p.nombre}" loading="lazy" />`).join('')}
+                ${imgs.map(i => `<img src="${i}" alt="${p.nombre}" loading="lazy" style="width:100%;flex-shrink:0;aspect-ratio:4/5;object-fit:contain;padding:10px;background:#fff;display:block" />`).join('')}
               </div>
+              ${badgeHtml}
               ${imgs.length > 1 ? `
                 <button class="carousel-btn prev" onclick="moverCarrusel(event,'${carruselId}',-1)">‹</button>
                 <button class="carousel-btn next" onclick="moverCarrusel(event,'${carruselId}',1)">›</button>
@@ -685,6 +656,7 @@
               </div>
               <div class="price-wrap">
                 <div class="card-price">${p.precio}</div>
+                ${precioViejoHtml}
               </div>
               <button class="btn-comprar">🛒 Comprar</button>
             </div>
