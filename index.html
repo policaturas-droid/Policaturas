@@ -152,7 +152,48 @@
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}.catalog-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}.confianza{grid-template-columns:repeat(2,1fr)}.mv-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:560px){.cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.modal-img{max-height:260px}.confianza{grid-template-columns:1fr}.mv-grid{grid-template-columns:1fr}}
+    @media(max-width:560px){
+      .cat-grid{grid-template-columns:1fr}.catalog-grid{grid-template-columns:1fr}nav{display:none}.hero h1{font-size:2.2rem}.confianza{grid-template-columns:1fr}.mv-grid{grid-template-columns:1fr}
+      /* Modal móvil — pantalla completa con X fija arriba */
+      .overlay{padding:0;align-items:flex-end}
+      .modal{
+        grid-template-columns:1fr;
+        max-height:92vh;
+        border-radius:16px 16px 0 0;
+        overflow:hidden;
+        transform:translateY(100%);
+        transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+        position:relative;
+      }
+      .overlay.open .modal{transform:translateY(0)}
+      /* Barra de arrastre visual */
+      .modal::before{
+        content:'';
+        display:block;
+        width:40px;height:4px;
+        background:var(--border);
+        border-radius:2px;
+        margin:12px auto 0;
+        position:absolute;
+        top:0;left:50%;transform:translateX(-50%);
+        z-index:10;
+      }
+      .modal-img{max-height:240px;padding:12px}
+      .modal-img img{max-height:220px}
+      .modal-body{padding:1.2rem 1.2rem 2rem;max-height:calc(92vh - 240px);overflow-y:auto}
+      /* X fija arriba a la derecha */
+      .modal-close{
+        position:fixed;
+        top:calc(8vh);
+        right:1rem;
+        z-index:600;
+        background:rgba(15,14,12,0.85);
+        backdrop-filter:blur(8px);
+        border-color:var(--border);
+        width:38px;height:38px;
+        font-size:1rem;
+      }
+    }
 
     /* CARRUSEL */
     .carousel{position:relative;overflow:hidden;background:#fff}
@@ -806,6 +847,15 @@
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+    // ── SWIPE PARA CERRAR EN MÓVIL ──
+    let touchStartY = 0;
+    const modal = document.getElementById('modal');
+    modal.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive:true});
+    modal.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].clientY - touchStartY;
+      if (diff > 80) cerrarModal(); // swipe hacia abajo > 80px cierra
+    }, {passive:true});
 
     // ── MÁS VENDIDOS ──
     const masVendidos = [
